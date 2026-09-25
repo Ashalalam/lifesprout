@@ -30,7 +30,9 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+# Exclude all build artifacts EXCEPT the Flutter web output (served by Vercel)
 /build/
+!/build/web/
 /coverage/
 
 # Symbolication related
