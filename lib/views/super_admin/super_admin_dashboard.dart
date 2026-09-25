@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_config.dart';
 import '../../config/app_theme.dart';
+import '../../config/responsive_layout.dart';
 import '../../models/company_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/accounting_provider.dart';
@@ -298,7 +299,7 @@ class _OverviewTab extends StatelessWidget {
         realRevenue > 0 ? realRevenue : superAdmin.monthlySaasRevenue;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: context.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -352,54 +353,41 @@ class _OverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // KPI cards — wired to real data
-          Row(
-            children: [
-              Expanded(
-                child: _MetricCard(
-                  title: 'Active Client Companies',
-                  value: '${superAdmin.activeStoresCount}',
-                  icon: Icons.storefront,
-                  color: AppTheme.primaryBlue,
-                  subtitle: '${superAdmin.tenants.where((t) => t.isActive).length} active tenants',
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _MetricCard(
-                  title: 'Platform Revenue',
-                  value: '₹${displayRevenue.toStringAsFixed(0)}',
-                  icon: Icons.payments,
-                  color: AppTheme.successGreen,
-                  subtitle: realRevenue > 0 ? 'Live POS data' : 'Monthly SaaS',
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _MetricCard(
-                  title: 'Total Invoices',
-                  value: '${accounting.salesInvoices.length}',
-                  icon: Icons.receipt_long,
-                  color: AppTheme.accentOrange,
-                  subtitle: 'Across all tenants',
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _MetricCard(
-                  title: 'OTA Build',
-                  value: ota.versionInfo.latestVersion,
-                  icon: Icons.system_update_alt,
-                  color: ota.versionInfo.updateAvailable
-                      ? AppTheme.warningAmber
-                      : AppTheme.successGreen,
-                  subtitle: ota.versionInfo.updateAvailable
-                      ? 'Update pending'
-                      : 'Latest deployed',
-                ),
-              ),
-            ],
-          ),
+          // KPI cards — responsive wrap on mobile
+          KpiRow(kpis: [
+            _MetricCard(
+              title: 'Active Client Companies',
+              value: '${superAdmin.activeStoresCount}',
+              icon: Icons.storefront,
+              color: AppTheme.primaryBlue,
+              subtitle: '${superAdmin.tenants.where((t) => t.isActive).length} active tenants',
+            ),
+            _MetricCard(
+              title: 'Platform Revenue',
+              value: '₹${displayRevenue.toStringAsFixed(0)}',
+              icon: Icons.payments,
+              color: AppTheme.successGreen,
+              subtitle: realRevenue > 0 ? 'Live POS data' : 'Monthly SaaS',
+            ),
+            _MetricCard(
+              title: 'Total Invoices',
+              value: '${accounting.salesInvoices.length}',
+              icon: Icons.receipt_long,
+              color: AppTheme.accentOrange,
+              subtitle: 'Across all tenants',
+            ),
+            _MetricCard(
+              title: 'OTA Build',
+              value: ota.versionInfo.latestVersion,
+              icon: Icons.system_update_alt,
+              color: ota.versionInfo.updateAvailable
+                  ? AppTheme.warningAmber
+                  : AppTheme.successGreen,
+              subtitle: ota.versionInfo.updateAvailable
+                  ? 'Update pending'
+                  : 'Latest deployed',
+            ),
+          ]),
           const SizedBox(height: 28),
 
           // Supabase health row
@@ -670,13 +658,12 @@ class _AnalyticsTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Row 1: Revenue bar + industry pie
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Bar chart
+          // Row 1: Revenue bar + industry pie — stacks on mobile
+          LayoutBuilder(builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < Bp.mobile;
+            final children = [
               Expanded(
-                flex: 3,
+                flex: isNarrow ? 1 : 3,
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
@@ -886,8 +873,23 @@ class _AnalyticsTab extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ];
+            return isNarrow
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: children
+                        .expand((c) => [c, const SizedBox(height: 16)])
+                        .toList()
+                      ..removeLast(),
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: children
+                        .expand((c) => [c, const SizedBox(width: 16)])
+                        .toList()
+                      ..removeLast(),
+                  );
+          }),
           const SizedBox(height: 16),
 
           // Row 2: Store growth line chart

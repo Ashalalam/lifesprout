@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
+import '../../config/responsive_layout.dart';
 import '../../models/product_model.dart';
 import '../../models/batch_model.dart';
 import '../../providers/inventory_provider.dart';
@@ -65,10 +66,10 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
 
   Widget _buildStockTab(BuildContext context, InventoryProvider inventoryProvider) {
     return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      padding: context.pagePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -233,10 +234,10 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
 
   Widget _buildRtvTab(BuildContext context, InventoryProvider inventoryProvider) {
     return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      padding: context.pagePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -291,10 +292,10 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
 
   Widget _buildTransfersTab(BuildContext context, InventoryProvider inventoryProvider) {
     return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      padding: context.pagePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

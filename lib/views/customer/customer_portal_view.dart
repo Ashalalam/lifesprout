@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
+import '../../config/responsive_layout.dart';
 import '../../models/customer_model.dart';
 import '../../models/invoice_model.dart';
 import '../../providers/auth_provider.dart';
@@ -151,7 +152,7 @@ class _RefillRemindersTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: context.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -267,7 +268,7 @@ class _PrescriptionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: context.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -563,7 +564,7 @@ class _PurchaseHistoryTab extends StatelessWidget {
                   children: [
                     Container(
                       color: Colors.grey.shade50,
-                      padding: const EdgeInsets.all(16),
+                      padding: context.pagePadding,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

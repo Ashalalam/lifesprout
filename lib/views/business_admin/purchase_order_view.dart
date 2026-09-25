@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/app_theme.dart';
+import '../../config/responsive_layout.dart';
 import '../../models/rtv_model.dart';
 
 // ─── Lightweight PO model (local only until Supabase is wired) ───────────────
@@ -270,7 +271,7 @@ class _PurchaseOrderTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: context.pagePadding,
       child: Column(
         children: [
           Row(
@@ -339,7 +340,7 @@ class _PurchaseOrderTab extends StatelessWidget {
                           children: [
                             Container(
                               color: Colors.grey.shade50,
-                              padding: const EdgeInsets.all(16),
+                              padding: context.pagePadding,
                               child: Table(
                                 border: TableBorder.all(
                                     color: Colors.grey.shade300),
@@ -505,7 +506,7 @@ class _VendorTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: context.pagePadding,
       child: Column(
         children: [
           Row(
@@ -727,7 +728,7 @@ class _RtvTab extends StatelessWidget {
         rtvNotes.fold<double>(0, (s, r) => s + r.totalRefundAmount);
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: context.pagePadding,
       child: Column(
         children: [
           Row(

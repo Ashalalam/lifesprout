@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
+import '../../config/responsive_layout.dart';
 import '../../providers/accounting_provider.dart';
 
 class ScheduleHRegisterView extends StatelessWidget {
@@ -13,33 +14,19 @@ class ScheduleHRegisterView extends StatelessWidget {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: context.pagePadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Schedule H / H1 & Narcotic Regulatory Register',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.errorRed),
-                    ),
-                    Text(
-                      'Statutory Drug Inspector Audit Logs — Protected by Pharmacist PIN Approval',
-                      style: TextStyle(color: AppTheme.textMuted, fontSize: 13),
-                    ),
-                  ],
-                ),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-                  onPressed: () {},
-                  icon: const Icon(Icons.download),
-                  label: const Text('Export Regulatory PDF Log'),
-                ),
-              ],
+            PageHeader(
+              title: 'Schedule H / H1 & Narcotic Regulatory Register',
+              subtitle: 'Statutory Drug Inspector Audit Logs — Protected by Pharmacist PIN Approval',
+              action: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
+                onPressed: () {},
+                icon: const Icon(Icons.download),
+                label: const Text('Export Regulatory PDF'),
+              ),
             ),
             const SizedBox(height: 20),
 

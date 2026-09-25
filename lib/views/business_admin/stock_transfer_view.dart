@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
+import '../../config/responsive_layout.dart';
 import '../../models/stock_transfer_model.dart';
 import '../../providers/inventory_provider.dart';
 
@@ -19,7 +20,7 @@ class _StockTransferViewState extends State<StockTransferView> {
           id: 'st_001',
           transferNumber: 'TRF-2026-0091',
           sourceBranch: 'LIFESPROUT Main Branch',
-          destinationBranch: 'Apex Healthcare — Zone B',
+          destinationBranch: 'Apex Healthcare â€” Zone B',
           productName: 'Amoxicillin 500mg Capsules',
           batchNumber: 'AMX-2024-09',
           quantity: 50,
@@ -30,7 +31,7 @@ class _StockTransferViewState extends State<StockTransferView> {
           id: 'st_002',
           transferNumber: 'TRF-2026-0092',
           sourceBranch: 'LIFESPROUT Main Branch',
-          destinationBranch: 'Sprout Retail — Mall Branch',
+          destinationBranch: 'Sprout Retail â€” Mall Branch',
           productName: 'Paracetamol 650mg Tablets',
           batchNumber: 'PCM-650-A',
           quantity: 200,
@@ -40,7 +41,7 @@ class _StockTransferViewState extends State<StockTransferView> {
         StockTransferModel(
           id: 'st_003',
           transferNumber: 'TRF-2026-0093',
-          sourceBranch: 'Apex Healthcare — Zone B',
+          sourceBranch: 'Apex Healthcare â€” Zone B',
           destinationBranch: 'LIFESPROUT Main Branch',
           productName: 'Digital Blood Pressure Monitor',
           batchNumber: 'BPM-2024-X',
@@ -56,7 +57,7 @@ class _StockTransferViewState extends State<StockTransferView> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: context.pagePadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -76,7 +77,7 @@ class _StockTransferViewState extends State<StockTransferView> {
                       ),
                     ),
                     Text(
-                      'Move inventory between stores · Real-time transfer tracking',
+                      'Move inventory between stores Â· Real-time transfer tracking',
                       style: TextStyle(
                           color: AppTheme.textMuted, fontSize: 13),
                     ),
@@ -94,25 +95,24 @@ class _StockTransferViewState extends State<StockTransferView> {
             ),
             const SizedBox(height: 16),
 
-            // KPI row
-            Row(
-              children: [
-                _kpi('Total Transfers', '${_transfers.length}',
+            // KPI row — responsive
+            KpiRow(kpis: [
+                _kpiWidget('Total Transfers', '${_transfers.length}',
                     Icons.compare_arrows, AppTheme.primaryBlue),
                 const SizedBox(width: 12),
-                _kpi(
+                _kpiWidget(
                     'In Transit',
                     '${_transfers.where((t) => t.status == 'In Transit').length}',
                     Icons.local_shipping,
                     AppTheme.warningAmber),
                 const SizedBox(width: 12),
-                _kpi(
+                _kpiWidget(
                     'Received',
                     '${_transfers.where((t) => t.status == 'Received').length}',
                     Icons.check_circle,
                     AppTheme.successGreen),
                 const SizedBox(width: 12),
-                _kpi(
+                _kpiWidget(
                     'Pending',
                     '${_transfers.where((t) => t.status == 'Pending').length}',
                     Icons.hourglass_top,
@@ -250,7 +250,7 @@ class _StockTransferViewState extends State<StockTransferView> {
                           .map((b) => DropdownMenuItem(
                               value: b.batchNumber,
                               child: Text(
-                                  '${b.batchNumber} — Stock: ${b.stockCount}',
+                                  '${b.batchNumber} â€” Stock: ${b.stockCount}',
                                   style:
                                       const TextStyle(fontSize: 13))))
                           .toList(),
@@ -314,7 +314,7 @@ class _StockTransferViewState extends State<StockTransferView> {
     );
   }
 
-  Widget _kpi(String label, String value, IconData icon, Color color) {
+  Widget _kpiWidget(String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Card(
         child: Padding(
@@ -381,12 +381,12 @@ class _TransferTile extends StatelessWidget {
         child: Icon(statusIcon, color: statusColor),
       ),
       title: Text(
-        '${transfer.transferNumber} — ${transfer.productName}',
+        '${transfer.transferNumber} â€” ${transfer.productName}',
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
-        '${transfer.sourceBranch}  →  ${transfer.destinationBranch}\n'
-        'Batch: ${transfer.batchNumber}  •  Qty: ${transfer.quantity}  •  '
+        '${transfer.sourceBranch}  â†’  ${transfer.destinationBranch}\n'
+        'Batch: ${transfer.batchNumber}  â€¢  Qty: ${transfer.quantity}  â€¢  '
         '${transfer.timestamp.day}/${transfer.timestamp.month}/${transfer.timestamp.year}',
         style: const TextStyle(fontSize: 12, height: 1.4),
       ),
