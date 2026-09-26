@@ -130,7 +130,7 @@ class AuthProvider extends ChangeNotifier {
 
   // ── PIN verification ──────────────────────────────────────────────────────
   bool verifyPharmacistPin(String pin) {
-    if (pin == AppConfig.defaultPharmacistPin) {
+    if (pin == AppConfig.pharmacistPin) {
       _isPinVerified = true;
       notifyListeners();
       return true;

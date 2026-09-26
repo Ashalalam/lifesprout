@@ -1,44 +1,76 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/product_model.dart';
 import '../models/batch_model.dart';
 import '../models/invoice_model.dart';
 
 class PosProvider extends ChangeNotifier {
   final List<InvoiceItem> _cartItems = [];
-  String _customerName = 'Walk-in Customer';
-  String _customerPhone = '+447747571513';
-  String? _doctorName = 'Dr. A. Smith';
-  String? _doctorMciNo = 'MCI-88492';
+  String _customerName  = 'Walk-in Customer';
+  String _customerPhone = '';
+  String? _doctorName;
+  String? _doctorMciNo;
   double _discountAmount = 0.0;
   PaymentMode _paymentMode = PaymentMode.cash;
-  String _pricingTier = 'Retail'; // Retail, Wholesale, Distributor, Loyalty
+  String _pricingTier = 'Retail';
+  String _branch = 'Main Store';
 
-  List<InvoiceItem> get cartItems => List.unmodifiable(_cartItems);
-  String get customerName => _customerName;
-  String get customerPhone => _customerPhone;
-  String? get doctorName => _doctorName;
-  String? get doctorMciNo => _doctorMciNo;
-  double get discountAmount => _discountAmount;
-  String get pricingTier => _pricingTier;
+  // ── Branch management ──────────────────────────────────────────────────────
+  static const List<String> defaultBranches = [
+    'Main Store',
+    'Branch 1',
+    'Warehouse',
+    'Online',
+  ];
+  List<String> _branches = List.from(defaultBranches);
 
-  void setPricingTier(String tier) {
-    _pricingTier = tier;
-    notifyListeners();
-  }
-  PaymentMode get paymentMode => _paymentMode;
+  List<InvoiceItem> get cartItems   => List.unmodifiable(_cartItems);
+  String get customerName           => _customerName;
+  String get customerPhone          => _customerPhone;
+  String? get doctorName            => _doctorName;
+  String? get doctorMciNo           => _doctorMciNo;
+  double get discountAmount         => _discountAmount;
+  String get pricingTier            => _pricingTier;
+  PaymentMode get paymentMode       => _paymentMode;
+  String get branch                 => _branch;
+  List<String> get branches         => List.unmodifiable(_branches);
 
-  double get subtotal => _cartItems.fold(0.0, (sum, i) => sum + i.lineTotal);
-  double get totalTax => _cartItems.fold(0.0, (sum, i) => sum + i.taxAmount);
-  double get grandTotal => subtotal - _discountAmount;
+  double get subtotal    => _cartItems.fold(0.0, (s, i) => s + i.lineTotal);
+  double get totalTax    => _cartItems.fold(0.0, (s, i) => s + i.taxAmount);
+  double get grandTotal  => subtotal - _discountAmount;
 
   bool get requiresPharmacistPin =>
       _cartItems.any((item) => item.product.requiresPharmacistPin);
 
-  void setCustomerDetails(String name, String phone, {String? docName, String? docMci}) {
-    _customerName = name.isEmpty ? 'Walk-in Customer' : name;
-    _customerPhone = phone.isEmpty ? '+447747571513' : phone;
-    _doctorName = docName;
-    _doctorMciNo = docMci;
+  PosProvider() {
+    _loadBranches();
+  }
+
+  // ── Setters ────────────────────────────────────────────────────────────────
+  void setPricingTier(String tier) {
+    _pricingTier = tier;
+    notifyListeners();
+  }
+
+  void setBranch(String b) {
+    _branch = b;
+    notifyListeners();
+  }
+
+  void addBranch(String name) {
+    if (name.isNotEmpty && !_branches.contains(name)) {
+      _branches.add(name);
+      _saveBranches();
+      notifyListeners();
+    }
+  }
+
+  void setCustomerDetails(String name, String phone,
+      {String? docName, String? docMci}) {
+    _customerName  = name.isEmpty ? 'Walk-in Customer' : name;
+    _customerPhone = phone;
+    _doctorName    = docName;
+    _doctorMciNo   = docMci;
     notifyListeners();
   }
 
@@ -52,52 +84,31 @@ class PosProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ── Cart operations ────────────────────────────────────────────────────────
   void addToCart(ProductModel product, {BatchModel? selectedBatch}) {
     final batchToUse = selectedBatch ?? product.fefoBatch;
     if (batchToUse == null) return;
 
-    // Apply correct price based on active pricing tier
-    final double unitPrice = _resolvePriceTier(product, batchToUse);
+    final unitPrice = _resolvePriceTier(product, batchToUse);
 
-    final existingIndex = _cartItems.indexWhere(
-      (item) => item.product.id == product.id && item.batch.id == batchToUse.id,
-    );
+    final idx = _cartItems.indexWhere(
+        (i) => i.product.id == product.id && i.batch.id == batchToUse.id);
 
-    if (existingIndex >= 0) {
-      if (_cartItems[existingIndex].quantity < batchToUse.stockCount) {
-        _cartItems[existingIndex].quantity++;
+    if (idx >= 0) {
+      if (_cartItems[idx].quantity < batchToUse.stockCount) {
+        _cartItems[idx].quantity++;
       }
     } else {
-      _cartItems.add(
-        InvoiceItem(
-          product: product,
-          batch: batchToUse,
-          quantity: 1,
-          unitPrice: unitPrice,
-          taxPercent: product.taxPercent,
-        ),
-      );
+      _cartItems.add(InvoiceItem(
+        product: product,
+        batch: batchToUse,
+        quantity: 1,
+        freeQuantity: 0,
+        unitPrice: unitPrice,
+        taxPercent: product.taxPercent,
+      ));
     }
     notifyListeners();
-  }
-
-  /// Returns the correct unit price for the active pricing tier.
-  double _resolvePriceTier(ProductModel product, BatchModel batch) {
-    switch (_pricingTier) {
-      case 'Wholesale':
-        return batch.wholesalePrice > 0 ? batch.wholesalePrice : batch.mrp;
-      case 'Distributor':
-        // Distributor gets 10% below wholesale
-        final ws =
-            batch.wholesalePrice > 0 ? batch.wholesalePrice : batch.mrp;
-        return ws * 0.90;
-      case 'Loyalty':
-        // Loyalty customers get 5% discount on MRP
-        return batch.mrp * 0.95;
-      case 'Retail':
-      default:
-        return batch.mrp;
-    }
   }
 
   void updateQuantity(InvoiceItem item, int newQty) {
@@ -109,6 +120,16 @@ class PosProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFreeQuantity(InvoiceItem item, int freeQty) {
+    item.freeQuantity = freeQty < 0 ? 0 : freeQty;
+    notifyListeners();
+  }
+
+  void updateLineDiscount(InvoiceItem item, double discount) {
+    item.lineDiscount = discount < 0 ? 0 : discount;
+    notifyListeners();
+  }
+
   void removeFromCart(InvoiceItem item) {
     _cartItems.remove(item);
     notifyListeners();
@@ -116,14 +137,19 @@ class PosProvider extends ChangeNotifier {
 
   void clearCart() {
     _cartItems.clear();
-    _discountAmount = 0.0;
-    _customerName = 'Walk-in Customer';
-    _customerPhone = '+447747571513';
+    _discountAmount  = 0.0;
+    _customerName    = 'Walk-in Customer';
+    _customerPhone   = '';
+    _doctorName      = null;
+    _doctorMciNo     = null;
     notifyListeners();
   }
 
+  // ── Checkout ───────────────────────────────────────────────────────────────
   InvoiceModel checkout({required bool isOnline, String? pinApprovedBy}) {
-    final invoiceNum = 'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+    final invoiceNum =
+        'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+
     final invoice = InvoiceModel(
       id: 'inv_${DateTime.now().millisecondsSinceEpoch}',
       invoiceNumber: invoiceNum,
@@ -137,14 +163,54 @@ class PosProvider extends ChangeNotifier {
       paymentMode: _paymentMode,
       isSynced: isOnline,
       pharmacistPinApprovedBy: pinApprovedBy,
+      branch: _branch,
     );
 
-    // Deduct stock locally
-    for (var item in _cartItems) {
-      item.batch.stockCount -= item.quantity;
+    // Deduct billed qty from stock (free qty also deducted — it was physically dispensed)
+    for (final item in _cartItems) {
+      final totalDispensed = item.quantity + item.freeQuantity;
+      item.batch.stockCount =
+          (item.batch.stockCount - totalDispensed).clamp(0, item.batch.stockCount);
     }
 
     clearCart();
     return invoice;
+  }
+
+  // ── Internal ───────────────────────────────────────────────────────────────
+  double _resolvePriceTier(ProductModel product, BatchModel batch) {
+    switch (_pricingTier) {
+      case 'PTR':
+        return batch.ptrPrice > 0 ? batch.ptrPrice : batch.mrp;
+      case 'Wholesale':
+        return batch.wholesalePrice > 0 ? batch.wholesalePrice : batch.mrp;
+      case 'Distributor':
+        final ws = batch.wholesalePrice > 0 ? batch.wholesalePrice : batch.mrp;
+        return ws * 0.90;
+      case 'Loyalty':
+        return batch.mrp * 0.95;
+      case 'Retail':
+      default:
+        return batch.mrp;
+    }
+  }
+
+  Future<void> _loadBranches() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getStringList('pos_branches');
+      if (saved != null && saved.isNotEmpty) {
+        _branches = saved;
+        if (!_branches.contains(_branch)) _branch = _branches.first;
+        notifyListeners();
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _saveBranches() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('pos_branches', _branches);
+    } catch (_) {}
   }
 }

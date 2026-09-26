@@ -1,17 +1,168 @@
 import 'batch_model.dart';
 
+// ── Dose type enum ────────────────────────────────────────────────────────────
+enum DoseType {
+  tablet,
+  capsule,
+  syrup,
+  injection,
+  drops,
+  cream,
+  ointment,
+  gel,
+  powder,
+  inhaler,
+  patch,
+  suppository,
+  other,
+}
+
+extension DoseTypeX on DoseType {
+  String get label {
+    switch (this) {
+      case DoseType.tablet:     return 'Tablet';
+      case DoseType.capsule:    return 'Capsule';
+      case DoseType.syrup:      return 'Syrup';
+      case DoseType.injection:  return 'Injection';
+      case DoseType.drops:      return 'Drops / Eye-Ear-Nasal';
+      case DoseType.cream:      return 'Cream';
+      case DoseType.ointment:   return 'Ointment';
+      case DoseType.gel:        return 'Gel';
+      case DoseType.powder:     return 'Powder / Sachet';
+      case DoseType.inhaler:    return 'Inhaler';
+      case DoseType.patch:      return 'Transdermal Patch';
+      case DoseType.suppository:return 'Suppository';
+      case DoseType.other:      return 'Other';
+    }
+  }
+
+  /// Unit label shown on POS (e.g. "strip", "bottle", "vial")
+  String get unitLabel {
+    switch (this) {
+      case DoseType.tablet:
+      case DoseType.capsule:    return 'strip';
+      case DoseType.syrup:
+      case DoseType.drops:      return 'bottle';
+      case DoseType.injection:  return 'vial';
+      case DoseType.cream:
+      case DoseType.ointment:
+      case DoseType.gel:        return 'tube';
+      case DoseType.powder:     return 'sachet';
+      case DoseType.inhaler:    return 'unit';
+      case DoseType.patch:      return 'patch';
+      case DoseType.suppository:return 'unit';
+      default:                  return 'unit';
+    }
+  }
+
+  /// Whether this dose type supports strip/blister pack configuration
+  bool get isStripBased =>
+      this == DoseType.tablet || this == DoseType.capsule;
+
+  /// Whether this dose type is a liquid (volume-based)
+  bool get isLiquid =>
+      this == DoseType.syrup ||
+      this == DoseType.drops ||
+      this == DoseType.injection;
+}
+
+// ── Standard packaging configs ────────────────────────────────────────────────
+class PackagingConfig {
+  /// Human-readable label  e.g. "10×10", "10×15", "60ml"
+  final String label;
+  /// Units per strip / pack  (tablets in a blister, ml volume, etc.)
+  final int unitsPerStrip;
+  /// Strips per box (1 for liquids/injections)
+  final int stripsPerBox;
+
+  const PackagingConfig({
+    required this.label,
+    required this.unitsPerStrip,
+    this.stripsPerBox = 1,
+  });
+
+  /// Total units in one box
+  int get unitsPerBox => unitsPerStrip * stripsPerBox;
+
+  /// Display: "10 strips × 10 tabs" or "60 ml"
+  String get displayText {
+    if (stripsPerBox > 1) {
+      return '$stripsPerBox strips × $unitsPerStrip units';
+    }
+    return '$unitsPerStrip $label';
+  }
+
+  // Common presets
+  static const PackagingConfig strip10x10 =
+      PackagingConfig(label: '10×10', unitsPerStrip: 10, stripsPerBox: 10);
+  static const PackagingConfig strip10x15 =
+      PackagingConfig(label: '10×15', unitsPerStrip: 15, stripsPerBox: 10);
+  static const PackagingConfig strip10x6 =
+      PackagingConfig(label: '10×6', unitsPerStrip: 6, stripsPerBox: 10);
+  static const PackagingConfig strip6x10 =
+      PackagingConfig(label: '6×10', unitsPerStrip: 10, stripsPerBox: 6);
+  static const PackagingConfig strip4x10 =
+      PackagingConfig(label: '4×10', unitsPerStrip: 10, stripsPerBox: 4);
+  static const PackagingConfig strip1x10 =
+      PackagingConfig(label: '1×10', unitsPerStrip: 10, stripsPerBox: 1);
+  static const PackagingConfig strip1x15 =
+      PackagingConfig(label: '1×15', unitsPerStrip: 15, stripsPerBox: 1);
+  static const PackagingConfig strip1x6 =
+      PackagingConfig(label: '1×6', unitsPerStrip: 6, stripsPerBox: 1);
+  static const PackagingConfig bottle30ml =
+      PackagingConfig(label: '30 ml', unitsPerStrip: 30);
+  static const PackagingConfig bottle60ml =
+      PackagingConfig(label: '60 ml', unitsPerStrip: 60);
+  static const PackagingConfig bottle100ml =
+      PackagingConfig(label: '100 ml', unitsPerStrip: 100);
+  static const PackagingConfig bottle200ml =
+      PackagingConfig(label: '200 ml', unitsPerStrip: 200);
+  static const PackagingConfig vial1ml =
+      PackagingConfig(label: '1 ml vial', unitsPerStrip: 1);
+  static const PackagingConfig vial2ml =
+      PackagingConfig(label: '2 ml vial', unitsPerStrip: 2);
+  static const PackagingConfig vial10ml =
+      PackagingConfig(label: '10 ml vial', unitsPerStrip: 10);
+
+  static List<PackagingConfig> presetsFor(DoseType dose) {
+    switch (dose) {
+      case DoseType.tablet:
+      case DoseType.capsule:
+        return [
+          strip10x10, strip10x15, strip10x6, strip6x10,
+          strip4x10, strip1x10, strip1x15, strip1x6,
+          PackagingConfig(label: 'Custom', unitsPerStrip: 10),
+        ];
+      case DoseType.syrup:
+      case DoseType.drops:
+        return [bottle30ml, bottle60ml, bottle100ml, bottle200ml,
+            PackagingConfig(label: 'Custom', unitsPerStrip: 0)];
+      case DoseType.injection:
+        return [vial1ml, vial2ml, vial10ml,
+            PackagingConfig(label: 'Custom', unitsPerStrip: 0)];
+      default:
+        return [PackagingConfig(label: 'Unit', unitsPerStrip: 1)];
+    }
+  }
+}
+
+// ── Product model ─────────────────────────────────────────────────────────────
 class ProductModel {
   final String id;
   final String name;
-  final String genericSalt; // e.g. Paracetamol 500mg
+  final String genericSalt;
   final String barcode;
   final String hsnCode;
-  final double taxPercent; // 0, 5, 12, 18, 28
+  final double taxPercent;
   final String manufacturer;
   final bool isScheduleH;
   final bool isScheduleH1;
   final bool isNarcotic;
   final List<BatchModel> batches;
+
+  // ── New pharma fields ──────────────────────────────────────────────────────
+  final DoseType doseType;
+  final PackagingConfig? packagingConfig;
 
   ProductModel({
     required this.id,
@@ -21,23 +172,40 @@ class ProductModel {
     required this.hsnCode,
     required this.taxPercent,
     required this.manufacturer,
-    this.isScheduleH = false,
+    this.isScheduleH  = false,
     this.isScheduleH1 = false,
-    this.isNarcotic = false,
+    this.isNarcotic   = false,
     required this.batches,
+    this.doseType      = DoseType.tablet,
+    this.packagingConfig,
   });
 
   bool get requiresPharmacistPin => isScheduleH || isScheduleH1 || isNarcotic;
 
-  // FEFO Sorting: Return batch closest to expiry first (ignoring already expired ones)
+  // ── FEFO: first non-expired in-stock batch by earliest expiry ─────────────
   BatchModel? get fefoBatch {
-    final validBatches = batches.where((b) => b.stockCount > 0 && !b.isExpired).toList();
-    if (validBatches.isEmpty) return null;
-    validBatches.sort((a, b) => a.expDate.compareTo(b.expDate));
-    return validBatches.first;
+    final valid = batches
+        .where((b) => b.stockCount > 0 && !b.isExpired)
+        .toList()
+      ..sort((a, b) => a.expDate.compareTo(b.expDate));
+    return valid.isEmpty ? null : valid.first;
   }
 
-  int get totalStock => batches.fold(0, (sum, b) => sum + b.stockCount);
+  // ── Near expiry batches (≤ 90 days) ──────────────────────────────────────
+  List<BatchModel> get nearExpiryBatches =>
+      batches.where((b) => b.isNearExpiry && !b.isExpired).toList()
+        ..sort((a, b) => a.expDate.compareTo(b.expDate));
+
+  int get totalStock => batches.fold(0, (s, b) => s + b.stockCount);
+
+  /// Packaging label for POS display e.g. "10×10 strips"
+  String get packagingLabel {
+    if (packagingConfig == null) return doseType.unitLabel;
+    if (doseType.isStripBased && packagingConfig!.stripsPerBox > 1) {
+      return '${packagingConfig!.label} (${packagingConfig!.stripsPerBox} strips)';
+    }
+    return packagingConfig!.label;
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -51,6 +219,10 @@ class ProductModel {
         'isScheduleH1': isScheduleH1,
         'isNarcotic': isNarcotic,
         'batches': batches.map((b) => b.toJson()).toList(),
+        'doseType': doseType.name,
+        'packagingLabel': packagingConfig?.label,
+        'packagingUnitsPerStrip': packagingConfig?.unitsPerStrip,
+        'packagingStripsPerBox': packagingConfig?.stripsPerBox,
       };
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -67,5 +239,16 @@ class ProductModel {
         batches: (json['batches'] as List)
             .map((b) => BatchModel.fromJson(b))
             .toList(),
+        doseType: DoseType.values.firstWhere(
+          (e) => e.name == (json['doseType'] ?? 'tablet'),
+          orElse: () => DoseType.tablet,
+        ),
+        packagingConfig: json['packagingLabel'] != null
+            ? PackagingConfig(
+                label: json['packagingLabel'],
+                unitsPerStrip: json['packagingUnitsPerStrip'] ?? 10,
+                stripsPerBox: json['packagingStripsPerBox'] ?? 1,
+              )
+            : null,
       );
 }

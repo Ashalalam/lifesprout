@@ -542,11 +542,14 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
     final mrpCtrl      = TextEditingController();
     final wsCtrl       = TextEditingController();
     final ppCtrl       = TextEditingController();
+    final ptrCtrl      = TextEditingController();
     final stockCtrl    = TextEditingController();
     final rackCtrl     = TextEditingController();
     final mfgCtrl      = TextEditingController(
         text: '${DateTime.now().month}/${DateTime.now().year}');
     final expCtrl      = TextEditingController();
+    DoseType doseType = DoseType.tablet;
+    PackagingConfig? packagingConfig = PackagingConfig.strip10x10;
 
     showDialog(
       context: context,
@@ -610,6 +613,42 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                   ),
                   const SizedBox(height: 10),
 
+                  // Dose type
+                  StatefulBuilder(builder: (ctx2, setLocal) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DropdownButtonFormField<DoseType>(
+                          initialValue: doseType,
+                          decoration: const InputDecoration(labelText: 'Dose Type / Form *'),
+                          items: DoseType.values.map((d) =>
+                            DropdownMenuItem(value: d, child: Text(d.label, style: const TextStyle(fontSize: 13)))).toList(),
+                          onChanged: (v) {
+                            if (v != null) {
+                              doseType = v;
+                              packagingConfig = PackagingConfig.presetsFor(v).first;
+                              setDlg(() {});
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<String>(
+                          initialValue: packagingConfig?.label,
+                          decoration: const InputDecoration(labelText: 'Packaging Configuration'),
+                          items: PackagingConfig.presetsFor(doseType).map((p) =>
+                            DropdownMenuItem(value: p.label, child: Text(p.label, style: const TextStyle(fontSize: 13)))).toList(),
+                          onChanged: (v) {
+                            if (v != null) {
+                              packagingConfig = PackagingConfig.presetsFor(doseType)
+                                  .firstWhere((p) => p.label == v, orElse: () => PackagingConfig.presetsFor(doseType).first);
+                              setDlg(() {});
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  }),
+                  const SizedBox(height: 10),
                   // GST tax slab
                   DropdownButtonFormField<double>(
                     initialValue: taxPercent,
@@ -732,10 +771,21 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                         controller: wsCtrl,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'Wholesale Price (â‚¹)'),
+                            labelText: 'Wholesale Price (Rs.)'),
                       ),
                     ),
                   ]),
+                  const SizedBox(height: 10),
+                  // PTR field
+                  TextField(
+                    controller: ptrCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'PTR — Price to Retailer (Rs.)',
+                      hintText: 'e.g. 95.00',
+                      prefixIcon: Icon(Icons.storefront),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: rackCtrl,
@@ -829,6 +879,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                   mrp: double.tryParse(mrpCtrl.text) ?? 0,
                   purchasePrice: double.tryParse(ppCtrl.text) ?? 0,
                   wholesalePrice: double.tryParse(wsCtrl.text) ?? 0,
+                  ptrPrice: double.tryParse(ptrCtrl.text) ?? 0,
                   stockCount: int.tryParse(stockCtrl.text) ?? 0,
                   rackLocation: rackCtrl.text.trim().isEmpty
                       ? 'General Shelf'
@@ -854,6 +905,8 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                   isScheduleH1: isScheduleH1,
                   isNarcotic: isNarcotic,
                   batches: [batch],
+                  doseType: doseType,
+                  packagingConfig: packagingConfig,
                 );
 
                 inventoryProvider.addProduct(product);

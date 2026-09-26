@@ -334,90 +334,71 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // â”€â”€ Cart panel (desktop inline + mobile sheet) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // -- Cart panel (desktop inline + mobile sheet) --
   Widget _cartPanel(BuildContext context, PosProvider pos) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Branch selector
+        Row(
+          children: [
+            const Icon(Icons.store_outlined, size: 16, color: AppTheme.primaryBlue),
+            const SizedBox(width: 6),
+            const Text('Branch:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DropdownButton<String>(
+                value: pos.branch,
+                isDense: true,
+                isExpanded: true,
+                items: pos.branches.map((b) =>
+                  DropdownMenuItem(value: b, child: Text(b, style: const TextStyle(fontSize: 12)))).toList(),
+                onChanged: (b) { if (b != null) pos.setBranch(b); },
+              ),
+            ),
+          ],
+        ),
+        const Divider(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text('Billing Cart',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryBlue)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
             if (pos.cartItems.isNotEmpty)
               TextButton.icon(
                 onPressed: pos.clearCart,
-                icon: const Icon(Icons.delete_outline,
-                    size: 16, color: AppTheme.errorRed),
-                label: const Text('Clear',
-                    style:
-                        TextStyle(color: AppTheme.errorRed, fontSize: 11)),
+                icon: const Icon(Icons.delete_outline, size: 16, color: AppTheme.errorRed),
+                label: const Text('Clear', style: TextStyle(color: AppTheme.errorRed, fontSize: 11)),
               ),
           ],
         ),
         const Divider(height: 12),
-
-        // Customer / doctor fields
         Row(children: [
-          Expanded(
-            child: TextField(
-              controller: _custNameCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Customer Name', isDense: true),
-              onChanged: (v) =>
-                  pos.setCustomerDetails(v, _custPhoneCtrl.text),
-            ),
-          ),
+          Expanded(child: TextField(controller: _custNameCtrl,
+              decoration: const InputDecoration(labelText: 'Customer Name', isDense: true),
+              onChanged: (v) => pos.setCustomerDetails(v, _custPhoneCtrl.text))),
           const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _custPhoneCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Phone', isDense: true),
-              onChanged: (v) =>
-                  pos.setCustomerDetails(_custNameCtrl.text, v),
-            ),
-          ),
+          Expanded(child: TextField(controller: _custPhoneCtrl,
+              decoration: const InputDecoration(labelText: 'Phone', isDense: true),
+              onChanged: (v) => pos.setCustomerDetails(_custNameCtrl.text, v))),
         ]),
         const SizedBox(height: 8),
         Row(children: [
-          Expanded(
-            child: TextField(
-              controller: _docNameCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Doctor Name', isDense: true),
-              onChanged: (v) => pos.setCustomerDetails(
-                  _custNameCtrl.text, _custPhoneCtrl.text,
-                  docName: v, docMci: _docMciCtrl.text),
-            ),
-          ),
+          Expanded(child: TextField(controller: _docNameCtrl,
+              decoration: const InputDecoration(labelText: 'Doctor Name', isDense: true),
+              onChanged: (v) => pos.setCustomerDetails(_custNameCtrl.text, _custPhoneCtrl.text, docName: v, docMci: _docMciCtrl.text))),
           const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _docMciCtrl,
-              decoration:
-                  const InputDecoration(labelText: 'MCI No', isDense: true),
-              onChanged: (v) => pos.setCustomerDetails(
-                  _custNameCtrl.text, _custPhoneCtrl.text,
-                  docName: _docNameCtrl.text, docMci: v),
-            ),
-          ),
+          Expanded(child: TextField(controller: _docMciCtrl,
+              decoration: const InputDecoration(labelText: 'MCI No', isDense: true),
+              onChanged: (v) => pos.setCustomerDetails(_custNameCtrl.text, _custPhoneCtrl.text, docName: _docNameCtrl.text, docMci: v))),
         ]),
         const SizedBox(height: 12),
-
-        // Cart items
+        // Cart items with free qty + item discount
         if (pos.cartItems.isEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
-            child: Center(
-              child: Text('Cart is empty.',
-                  style:
-                      TextStyle(fontSize: 12, color: AppTheme.textMuted)),
-            ),
+            child: Center(child: Text('Cart is empty.', style: TextStyle(fontSize: 12, color: AppTheme.textMuted))),
           )
         else
           ListView.separated(
@@ -427,126 +408,157 @@ class _PosBillingViewState extends State<PosBillingView> {
             separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final item = pos.cartItems[index];
-              return ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                title: Text(item.product.name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 12),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
-                subtitle: Text(
-                    'Batch: ${item.batch.batchNumber} | Tax: ${item.taxPercent}%',
-                    style: const TextStyle(fontSize: 10)),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle_outline,
-                          size: 18),
-                      onPressed: () =>
-                          pos.updateQuantity(item, item.quantity - 1),
-                    ),
-                    Text('${item.quantity}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12)),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle_outline, size: 18),
-                      onPressed: () =>
-                          pos.updateQuantity(item, item.quantity + 1),
-                    ),
-                    Text('â‚¹${item.lineTotal.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12)),
-                  ],
-                ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    title: Row(children: [
+                      Expanded(child: Text(item.product.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                          maxLines: 1, overflow: TextOverflow.ellipsis)),
+                      if (item.product.requiresPharmacistPin)
+                        Container(padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                          decoration: BoxDecoration(color: AppTheme.errorRed.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(3)),
+                          child: const Text('PIN', style: TextStyle(fontSize: 9, color: AppTheme.errorRed, fontWeight: FontWeight.bold))),
+                    ]),
+                    subtitle: Text(
+                      'HSN: ${item.product.hsnCode}  |  Batch: ${item.batch.batchNumber}  |  '
+                      'GST: ${item.taxPercent.toStringAsFixed(0)}%  |  ${item.product.packagingLabel}',
+                      style: const TextStyle(fontSize: 10)),
+                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                      IconButton(icon: const Icon(Icons.remove_circle_outline, size: 18),
+                          onPressed: () => pos.updateQuantity(item, item.quantity - 1)),
+                      Text('${item.quantity}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      IconButton(icon: const Icon(Icons.add_circle_outline, size: 18),
+                          onPressed: () => pos.updateQuantity(item, item.quantity + 1)),
+                      Text(' =Rs.${item.lineTotal.toStringAsFixed(2)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    ]),
+                  ),
+                  // Free qty + item-level discount row
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                    child: Row(children: [
+                      const Icon(Icons.card_giftcard, size: 13, color: AppTheme.successGreen),
+                      const SizedBox(width: 3),
+                      const Text('Free:', style: TextStyle(fontSize: 11, color: AppTheme.successGreen)),
+                      const SizedBox(width: 4),
+                      SizedBox(width: 46, child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(isDense: true, hintText: '0',
+                            contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 4)),
+                        style: const TextStyle(fontSize: 11),
+                        onChanged: (v) => pos.updateFreeQuantity(item, int.tryParse(v) ?? 0))),
+                      const SizedBox(width: 10),
+                      const Icon(Icons.local_offer, size: 13, color: AppTheme.accentOrange),
+                      const SizedBox(width: 3),
+                      const Text('Disc(Rs.):', style: TextStyle(fontSize: 11, color: AppTheme.accentOrange)),
+                      const SizedBox(width: 4),
+                      SizedBox(width: 56, child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(isDense: true, hintText: '0.00',
+                            contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 4)),
+                        style: const TextStyle(fontSize: 11),
+                        onChanged: (v) => pos.updateLineDiscount(item, double.tryParse(v) ?? 0))),
+                      const Spacer(),
+                      Text('Net: Rs.${item.lineTotal.toStringAsFixed(2)}',
+                          style: const TextStyle(fontSize: 11, color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+                    ]),
+                  ),
+                ],
               );
             },
           ),
-
         const Divider(height: 12),
-
         // Totals
-        _totalRow('Subtotal:',
-            'â‚¹${pos.subtotal.toStringAsFixed(2)}', bold: false),
-        _totalRow('Total GST:',
-            'â‚¹${pos.totalTax.toStringAsFixed(2)}',
-            bold: false, valueColor: AppTheme.textMuted),
+        _totalRow('Subtotal (Gross):',
+            'Rs.${(pos.subtotal + pos.discountAmount + pos.cartItems.fold<double>(0, (s, i) => s + i.lineDiscount)).toStringAsFixed(2)}', bold: false),
+        if (pos.cartItems.any((i) => i.lineDiscount > 0))
+          _totalRow('Item Discounts:', '-Rs.${pos.cartItems.fold<double>(0, (s, i) => s + i.lineDiscount).toStringAsFixed(2)}',
+              bold: false, valueColor: AppTheme.accentOrange),
+        _totalRow('Total GST:', 'Rs.${pos.totalTax.toStringAsFixed(2)}', bold: false, valueColor: AppTheme.textMuted),
         const SizedBox(height: 6),
+        // Invoice-level discount
         Row(children: [
-          Text('Discount (â‚¹):', style: TextStyle(fontSize: 12)),
+          const Icon(Icons.discount_outlined, size: 14, color: AppTheme.accentOrange),
+          const SizedBox(width: 4),
+          const Text('Invoice Disc (Rs.):', style: TextStyle(fontSize: 12, color: AppTheme.accentOrange)),
           const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _discountCtrl,
+          Expanded(child: TextField(controller: _discountCtrl,
               keyboardType: TextInputType.number,
-              decoration:
-                  const InputDecoration(isDense: true, hintText: '0.00'),
-              onChanged: (v) =>
-                  pos.setDiscount(double.tryParse(v) ?? 0),
-            ),
-          ),
+              decoration: const InputDecoration(isDense: true, hintText: '0.00'),
+              onChanged: (v) => pos.setDiscount(double.tryParse(v) ?? 0))),
         ]),
+        if (pos.discountAmount > 0)
+          Padding(padding: const EdgeInsets.only(top: 4),
+            child: _totalRow('Invoice Discount:', '-Rs.${pos.discountAmount.toStringAsFixed(2)}',
+                bold: false, valueColor: AppTheme.accentOrange)),
         const SizedBox(height: 8),
-        _totalRow(
-          'Grand Total:',
-          'â‚¹${pos.grandTotal.toStringAsFixed(2)}',
-          bold: true,
-          labelSize: 16,
-          valueSize: 18,
+        // Grand total
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryBlue.withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.2)),
+          ),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            const Text('GRAND TOTAL',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+            Text('Rs.${pos.grandTotal.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+          ]),
         ),
         const SizedBox(height: 10),
-
         // Payment chips
-        Wrap(
-          spacing: 4,
-          runSpacing: 4,
-          children: PaymentMode.values.map((mode) {
-            final sel = pos.paymentMode == mode;
-            return ChoiceChip(
-              label: Text(mode.name.toUpperCase()),
-              selected: sel,
-              selectedColor: AppTheme.primaryBlue,
-              labelStyle: TextStyle(
-                  color: sel ? Colors.white : Colors.black87,
-                  fontSize: 10),
-              onSelected: (_) => pos.setPaymentMode(mode),
-            );
-          }).toList(),
-        ),
+        Wrap(spacing: 4, runSpacing: 4, children: PaymentMode.values.map((mode) {
+          final sel = pos.paymentMode == mode;
+          return ChoiceChip(
+            label: Text(mode.name.toUpperCase()),
+            selected: sel,
+            selectedColor: AppTheme.primaryBlue,
+            labelStyle: TextStyle(color: sel ? Colors.white : Colors.black87, fontSize: 10),
+            onSelected: (_) => pos.setPaymentMode(mode),
+          );
+        }).toList()),
         const SizedBox(height: 12),
-
-        // Checkout
+        // PIN warning
+        if (pos.requiresPharmacistPin)
+          Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(bottom: 10),
+            decoration: BoxDecoration(
+              color: AppTheme.errorRed.withValues(alpha: 0.07),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppTheme.errorRed.withValues(alpha: 0.4)),
+            ),
+            child: Row(children: const [
+              Icon(Icons.security, color: AppTheme.errorRed, size: 16),
+              SizedBox(width: 8),
+              Expanded(child: Text(
+                'Contains Schedule H/H1 / Narcotic medicines.\nAuthorised Pharmacist PIN required at checkout.',
+                style: TextStyle(fontSize: 11, color: AppTheme.errorRed, height: 1.4))),
+            ]),
+          ),
+        // Checkout button
         SizedBox(
           width: double.infinity,
           height: 46,
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: pos.requiresPharmacistPin
-                  ? AppTheme.errorRed
-                  : AppTheme.primaryBlue,
-            ),
-            onPressed: pos.cartItems.isEmpty
-                ? null
-                : () => _handleCheckout(context, pos),
-            icon: Icon(
-              pos.requiresPharmacistPin
-                  ? Icons.security
-                  : Icons.check_circle,
-              size: 18,
-            ),
+              backgroundColor: pos.requiresPharmacistPin ? AppTheme.errorRed : AppTheme.primaryBlue),
+            onPressed: pos.cartItems.isEmpty ? null : () => _handleCheckout(context, pos),
+            icon: Icon(pos.requiresPharmacistPin ? Icons.security : Icons.check_circle, size: 18),
             label: Text(
-              pos.requiresPharmacistPin
-                  ? 'Authorize & Pay Invoice'
-                  : 'Complete Sale & Print',
-              style: const TextStyle(fontSize: 13),
-            ),
+              pos.requiresPharmacistPin ? 'Authorise & Complete Sale' : 'Complete Sale & Print',
+              style: const TextStyle(fontSize: 13)),
           ),
         ),
       ],
     );
   }
-
   Widget _totalRow(
     String label,
     String value, {

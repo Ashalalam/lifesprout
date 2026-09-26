@@ -20,6 +20,9 @@ import 'views/customer/customer_portal_view.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load pharmacist PIN from SharedPreferences
+  await AppConfig.loadPin();
+
   // Initialize Supabase if credentials are configured.
   // Falls back to demo mode when placeholder values are present.
   if (AppConfig.supabaseConfigured) {

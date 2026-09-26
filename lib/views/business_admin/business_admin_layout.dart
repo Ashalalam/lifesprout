@@ -15,6 +15,8 @@ import 'stock_transfer_view.dart';
 import 'purchase_order_view.dart';
 import 'bank_reconciliation_view.dart';
 import 'sales_dashboard_view.dart';
+import 'settings_view.dart';
+import 'near_expiry_view.dart';
 
 class BusinessAdminLayout extends StatefulWidget {
   const BusinessAdminLayout({super.key});
@@ -33,20 +35,28 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
     _NavDest(Icons.inventory_2_outlined,            'Inventory'),
     _NavDest(Icons.verified_outlined,               'Schedule H'),
     _NavDest(Icons.account_balance_outlined,        'GST'),
+    _NavDest(Icons.warning_amber_outlined,          'Near Expiry'),
     _NavDest(Icons.compare_arrows,                  'Transfers'),
     _NavDest(Icons.shopping_bag_outlined,           'Purchase'),
     _NavDest(Icons.account_balance_wallet_outlined, 'Bank Recon'),
+    _NavDest(Icons.settings_outlined,               'Settings'),
   ];
 
   final List<Widget> _views = [
     const SalesDashboardView(),
-    const PosBillingView(), const InventoryView(), const ScheduleHRegisterView(),
-    const GstAccountingView(), const StockTransferView(), const PurchaseOrderView(),
+    const PosBillingView(),
+    const InventoryView(),
+    const ScheduleHRegisterView(),
+    const GstAccountingView(),
+    const NearExpiryView(),
+    const StockTransferView(),
+    const PurchaseOrderView(),
     const BankReconciliationView(),
+    const SettingsView(),
   ];
 
   // Bottom nav only shows 5 items; remaining are in the drawer
-  static const _bottomNavCount = 4;
+  static const _bottomNavCount = 5;
 
   @override
   Widget build(BuildContext context) {
