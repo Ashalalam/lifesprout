@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../config/responsive_layout.dart';
@@ -55,7 +55,7 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // ── Desktop: catalog | cart side-by-side ─────────────────────────────────
+  // â”€â”€ Desktop: catalog | cart side-by-side â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _desktopLayout(BuildContext ctx, InventoryProvider inv,
       PosProvider pos, List products) {
     return Row(
@@ -87,7 +87,7 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // ── Mobile: catalog → cart bottom sheet ──────────────────────────────────
+  // â”€â”€ Mobile: catalog â†’ cart bottom sheet â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _mobilLayout(BuildContext ctx, InventoryProvider inv,
       PosProvider pos, List products) {
     return Column(
@@ -146,7 +146,7 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // ── Search bar ────────────────────────────────────────────────────────────
+  // â”€â”€ Search bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _searchBar(BuildContext context, InventoryProvider inv) {
     return Row(
       children: [
@@ -194,7 +194,7 @@ class _PosBillingViewState extends State<PosBillingView> {
             items: ['Retail', 'Wholesale', 'Distributor', 'Loyalty']
                 .map((t) => DropdownMenuItem(
                     value: t,
-                    child: Text(t, style: const TextStyle(fontSize: 12))))
+                    child: Text(t, style: TextStyle(fontSize: 12))))
                 .toList(),
             onChanged: (t) {
               if (t != null) inv.setPricingTier(t);
@@ -205,7 +205,7 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // ── Product grid — adaptive columns ───────────────────────────────────────
+  // â”€â”€ Product grid â€” adaptive columns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _productGrid(
       BuildContext context, List products, PosProvider pos) {
     if (products.isEmpty) {
@@ -295,7 +295,7 @@ class _PosBillingViewState extends State<PosBillingView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('₹${batch?.mrp.toStringAsFixed(0) ?? '0'}',
+                              Text('â‚¹${batch?.mrp.toStringAsFixed(0) ?? '0'}',
                                   style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -334,7 +334,7 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // ── Cart panel (desktop inline + mobile sheet) ────────────────────────────
+  // â”€â”€ Cart panel (desktop inline + mobile sheet) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _cartPanel(BuildContext context, PosProvider pos) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -455,7 +455,7 @@ class _PosBillingViewState extends State<PosBillingView> {
                       onPressed: () =>
                           pos.updateQuantity(item, item.quantity + 1),
                     ),
-                    Text('₹${item.lineTotal.toStringAsFixed(2)}',
+                    Text('â‚¹${item.lineTotal.toStringAsFixed(2)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 12)),
                   ],
@@ -468,13 +468,13 @@ class _PosBillingViewState extends State<PosBillingView> {
 
         // Totals
         _totalRow('Subtotal:',
-            '₹${pos.subtotal.toStringAsFixed(2)}', bold: false),
+            'â‚¹${pos.subtotal.toStringAsFixed(2)}', bold: false),
         _totalRow('Total GST:',
-            '₹${pos.totalTax.toStringAsFixed(2)}',
+            'â‚¹${pos.totalTax.toStringAsFixed(2)}',
             bold: false, valueColor: AppTheme.textMuted),
         const SizedBox(height: 6),
         Row(children: [
-          const Text('Discount (₹):', style: TextStyle(fontSize: 12)),
+          Text('Discount (â‚¹):', style: TextStyle(fontSize: 12)),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -490,7 +490,7 @@ class _PosBillingViewState extends State<PosBillingView> {
         const SizedBox(height: 8),
         _totalRow(
           'Grand Total:',
-          '₹${pos.grandTotal.toStringAsFixed(2)}',
+          'â‚¹${pos.grandTotal.toStringAsFixed(2)}',
           bold: true,
           labelSize: 16,
           valueSize: 18,
@@ -575,7 +575,7 @@ class _PosBillingViewState extends State<PosBillingView> {
     );
   }
 
-  // ── Checkout logic ────────────────────────────────────────────────────────
+  // â”€â”€ Checkout logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Future<void> _handleCheckout(
       BuildContext context, PosProvider pos) async {
     final sync       = Provider.of<SyncService>(context, listen: false);
@@ -617,9 +617,9 @@ class _PosBillingViewState extends State<PosBillingView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Invoice: ${invoice.invoiceNumber}',
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text('${invoice.customerName} — ${invoice.customerPhone}'),
-            Text('Total: ₹${invoice.grandTotal.toStringAsFixed(2)}'),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            Text('${invoice.customerName} â€” ${invoice.customerPhone}'),
+            Text('Total: â‚¹${invoice.grandTotal.toStringAsFixed(2)}'),
             const SizedBox(height: 14),
             const Text('Distribute receipt:',
                 style: TextStyle(fontWeight: FontWeight.w600)),
@@ -648,9 +648,9 @@ class _PosBillingViewState extends State<PosBillingView> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Mobile cart bottom bar
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _MobileCartBar extends StatelessWidget {
   final PosProvider posProvider;
   final VoidCallback onTap;
@@ -700,9 +700,9 @@ class _MobileCartBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   count == 0
-                      ? 'Cart is empty — tap to open'
-                      : '$count item${count == 1 ? '' : 's'}  •  '
-                          '₹${posProvider.grandTotal.toStringAsFixed(2)}',
+                      ? 'Cart is empty â€” tap to open'
+                      : '$count item${count == 1 ? '' : 's'}  â€¢  '
+                          'â‚¹${posProvider.grandTotal.toStringAsFixed(2)}',
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

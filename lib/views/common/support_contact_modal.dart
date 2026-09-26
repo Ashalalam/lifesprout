@@ -38,10 +38,10 @@ class SupportContactModal extends StatelessWidget {
           Image.asset(
             'assets/images/lifesprout_logo.png',
             height: 60,
-            errorBuilder: (_, __, ___) => const Icon(Icons.medical_services, size: 50, color: AppTheme.primaryBlue),
+            errorBuilder: (_, __, ___) => Icon(Icons.medical_services, size: 50, color: AppTheme.primaryBlue),
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             'LIFESPROUT Care Support Desk',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
           ),
@@ -64,9 +64,9 @@ class SupportContactModal extends StatelessWidget {
                 backgroundColor: Color(0xFF25D366),
                 child: Icon(Icons.chat, color: Colors.white),
               ),
-              title: const Text(
+              title: Text(
                 'WhatsApp Support & Leads Desk',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               subtitle: const Text(
                 AppConfig.whatsappSupportNumber,

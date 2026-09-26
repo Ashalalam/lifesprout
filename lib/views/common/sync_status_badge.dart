@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/sync_service.dart';
 import '../../config/app_theme.dart';
@@ -73,10 +73,10 @@ class SyncStatusBadge extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Current Mode: ${syncService.networkState.name.toUpperCase()}'),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text('Pending Offline Transactions: ${syncService.pendingSyncCount}'),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               'BillSprout automatically queues all POS transactions offline during internet drops and replays them to Supabase PostgreSQL upon reconnection.',
               style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
             ),

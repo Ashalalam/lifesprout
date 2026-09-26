@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+﻿import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../../config/app_theme.dart';
 
-// mobile_scanner is not supported on web — conditionally import only on native
+// mobile_scanner is not supported on web â€” conditionally import only on native
 import 'barcode_scanner_stub.dart'
     if (dart.library.io) 'barcode_scanner_native.dart';
 
@@ -39,10 +39,10 @@ class BarcodeScannerModal extends StatefulWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Camera scanner is not available on web.\n'
               'Type or paste the barcode / product code below.',
-              style: TextStyle(color: AppTheme.textMuted, fontSize: 13),
+              style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
             ),
             const SizedBox(height: 14),
             TextField(

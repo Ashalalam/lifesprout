@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../config/responsive_layout.dart';
@@ -43,7 +43,7 @@ class _CustomerPortalViewState extends State<CustomerPortalView>
           children: const [
             Icon(Icons.person_pin, color: AppTheme.accentOrange),
             SizedBox(width: 10),
-            Text('Lifesprout Care — Patient Portal'),
+            Text('Lifesprout Care â€” Patient Portal'),
           ],
         ),
         actions: [
@@ -98,7 +98,7 @@ class _CustomerPortalViewState extends State<CustomerPortalView>
                         ),
                       ),
                       Text(
-                        '${customer.phone}  •  ${customer.email}',
+                        '${customer.phone}  â€¢  ${customer.email}',
                         style:
                             const TextStyle(color: Colors.white70, fontSize: 12),
                       ),
@@ -124,13 +124,13 @@ class _CustomerPortalViewState extends State<CustomerPortalView>
             child: TabBarView(
               controller: _tabController,
               children: [
-                // ── Tab 1: Chronic Refill Reminders ──────────────────────────
+                // â”€â”€ Tab 1: Chronic Refill Reminders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 _RefillRemindersTab(customer: customer),
 
-                // ── Tab 2: Prescriptions / Rx Upload ─────────────────────────
+                // â”€â”€ Tab 2: Prescriptions / Rx Upload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 _PrescriptionsTab(customer: customer),
 
-                // ── Tab 3: Purchase History ───────────────────────────────────
+                // â”€â”€ Tab 3: Purchase History â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 _PurchaseHistoryTab(
                     invoices: customerProvider.customerInvoices),
               ],
@@ -142,9 +142,9 @@ class _CustomerPortalViewState extends State<CustomerPortalView>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tab 1 — Chronic Refill Reminders
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Tab 1 â€” Chronic Refill Reminders
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _RefillRemindersTab extends StatelessWidget {
   final CustomerModel customer;
   const _RefillRemindersTab({required this.customer});
@@ -169,7 +169,7 @@ class _RefillRemindersTab extends StatelessWidget {
               ),
               Text(
                 'Automated Schedule Tracking',
-                style: TextStyle(color: AppTheme.textMuted, fontSize: 12),
+                style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
               ),
             ],
           ),
@@ -203,15 +203,15 @@ class _RefillRemindersTab extends StatelessWidget {
                     ),
                     title: Text(
                       item.medicineName,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Refill every ${item.refillIntervalDays} days  •  '
+                          'Refill every ${item.refillIntervalDays} days  â€¢  '
                           'Due: ${item.nextRefillDueDate.day}/${item.nextRefillDueDate.month}/${item.nextRefillDueDate.year}',
-                          style: const TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 12),
                         ),
                         if (item.isDueSoon)
                           Container(
@@ -224,8 +224,8 @@ class _RefillRemindersTab extends StatelessWidget {
                             ),
                             child: Text(
                               daysLeft < 0
-                                  ? 'OVERDUE — Refill Now!'
-                                  : '⚠ Due in $daysLeft day${daysLeft == 1 ? '' : 's'}',
+                                  ? 'OVERDUE â€” Refill Now!'
+                                  : 'âš  Due in $daysLeft day${daysLeft == 1 ? '' : 's'}',
                               style: const TextStyle(
                                   color: AppTheme.errorRed,
                                   fontSize: 11,
@@ -258,9 +258,9 @@ class _RefillRemindersTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tab 2 — Prescriptions / Rx Upload
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Tab 2 â€” Prescriptions / Rx Upload
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _PrescriptionsTab extends StatelessWidget {
   final CustomerModel customer;
   const _PrescriptionsTab({required this.customer});
@@ -313,7 +313,7 @@ class _PrescriptionsTab extends StatelessWidget {
                     subtitle: Text(
                       'Medications: ${rx.prescribedMedications.join(", ")}\n'
                       'Uploaded: ${rx.uploadDate.toString().substring(0, 10)}',
-                      style: const TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12),
                     ),
                     trailing: OutlinedButton.icon(
                       onPressed: () => _showRxDetail(context, rx),
@@ -337,7 +337,7 @@ class _PrescriptionsTab extends StatelessWidget {
           children: [
             const Icon(Icons.description, color: AppTheme.primaryBlue),
             const SizedBox(width: 10),
-            Text('Rx — Dr. ${rx.doctorName}'),
+            Text('Rx â€” Dr. ${rx.doctorName}'),
           ],
         ),
         content: Column(
@@ -432,9 +432,9 @@ class _PrescriptionsTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tab 3 — Purchase History
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Tab 3 â€” Purchase History
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _PurchaseHistoryTab extends StatelessWidget {
   final List<InvoiceModel> invoices;
   const _PurchaseHistoryTab({required this.invoices});
@@ -482,7 +482,7 @@ class _PurchaseHistoryTab extends StatelessWidget {
                 child: _statCard(
                   Icons.payments,
                   'Total Spent',
-                  '₹${totalSpent.toStringAsFixed(2)}',
+                  'â‚¹${totalSpent.toStringAsFixed(2)}',
                   AppTheme.successGreen,
                 ),
               ),
@@ -493,7 +493,7 @@ class _PurchaseHistoryTab extends StatelessWidget {
                   'Last Purchase',
                   invoices.isNotEmpty
                       ? '${invoices.last.timestamp.day}/${invoices.last.timestamp.month}/${invoices.last.timestamp.year}'
-                      : '—',
+                      : 'â€”',
                   AppTheme.accentOrange,
                 ),
               ),
@@ -519,20 +519,20 @@ class _PurchaseHistoryTab extends StatelessWidget {
                   ),
                   title: Text(
                     'Invoice #${inv.invoiceNumber}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    '${inv.timestamp.day}/${inv.timestamp.month}/${inv.timestamp.year}  •  '
-                    '${inv.paymentMode.name.toUpperCase()}  •  '
+                    '${inv.timestamp.day}/${inv.timestamp.month}/${inv.timestamp.year}  â€¢  '
+                    '${inv.paymentMode.name.toUpperCase()}  â€¢  '
                     '${inv.items.length} item${inv.items.length == 1 ? '' : 's'}',
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '₹${inv.grandTotal.toStringAsFixed(2)}',
+                        'â‚¹${inv.grandTotal.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -549,7 +549,7 @@ class _PurchaseHistoryTab extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          inv.isSynced ? '☁ Synced' : '⏳ Pending',
+                          inv.isSynced ? 'â˜ Synced' : 'â³ Pending',
                           style: TextStyle(
                             fontSize: 10,
                             color: inv.isSynced
@@ -621,20 +621,20 @@ class _PurchaseHistoryTab extends StatelessWidget {
                                     padding: const EdgeInsets.all(6),
                                     child: Text(item.product.name,
                                         style:
-                                            const TextStyle(fontSize: 12)),
+                                            TextStyle(fontSize: 12)),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(6),
                                     child: Text('${item.quantity}',
                                         style:
-                                            const TextStyle(fontSize: 12)),
+                                            TextStyle(fontSize: 12)),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(6),
                                     child: Text(
-                                        '₹${item.lineTotal.toStringAsFixed(2)}',
+                                        'â‚¹${item.lineTotal.toStringAsFixed(2)}',
                                         style:
-                                            const TextStyle(fontSize: 12)),
+                                            TextStyle(fontSize: 12)),
                                   ),
                                 ]);
                               }),
@@ -645,8 +645,8 @@ class _PurchaseHistoryTab extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                'GST: ₹${inv.totalTax.toStringAsFixed(2)}   '
-                                'Total: ₹${inv.grandTotal.toStringAsFixed(2)}',
+                                'GST: â‚¹${inv.totalTax.toStringAsFixed(2)}   '
+                                'Total: â‚¹${inv.grandTotal.toStringAsFixed(2)}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13,
@@ -706,7 +706,7 @@ class _PurchaseHistoryTab extends StatelessWidget {
           children: [
             Text(label,
                 style:
-                    const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
+                    TextStyle(fontSize: 11, color: AppTheme.textMuted)),
             Text(value,
                 style: TextStyle(
                     fontWeight: FontWeight.bold, fontSize: 15, color: color)),
@@ -732,9 +732,9 @@ class _PurchaseHistoryTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Shared helper
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Widget _emptyState(IconData icon, String message) {
   return Center(
     child: Padding(

@@ -267,10 +267,10 @@ class _LoginViewState extends State<LoginView>
             color: AppTheme.primaryBlue,
           ),
         ),
-        const SizedBox(height: 4),
-        const Text(
+        SizedBox(height: 4),
+        Text(
           'Select your portal and sign in.',
-          style: TextStyle(color: AppTheme.textMuted, fontSize: 13),
+          style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
         ),
         const SizedBox(height: 20),
 
@@ -393,8 +393,8 @@ class _LoginViewState extends State<LoginView>
         Center(
           child: TextButton.icon(
             onPressed: () => SupportContactModal.show(context),
-            icon: const Icon(Icons.help_outline, size: 16),
-            label: const Text(
+            icon: Icon(Icons.help_outline, size: 16),
+            label: Text(
               'Need Help? Contact Lifesprout Care Support',
               style: TextStyle(fontSize: 12),
             ),

@@ -651,7 +651,7 @@ class _AnalyticsTab extends StatelessWidget {
                   label: Text(
                     'Live: ${accounting.salesInvoices.length} invoices Â· '
                     'â‚¹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.grandTotal).toStringAsFixed(0)} total',
-                    style: const TextStyle(fontSize: 11),
+                    style: TextStyle(fontSize: 11),
                   ),
                 ),
             ],
@@ -1183,7 +1183,7 @@ class _TenantListTile extends StatelessWidget {
         ),
       ),
       title: Text(tenant.businessName,
-          style: const TextStyle(fontWeight: FontWeight.bold)),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       subtitle: Text(
         showFullDetails
             ? 'Owner: ${tenant.ownerName}  â€¢  ${tenant.industryType}  â€¢  GSTIN: ${tenant.gstin}\n'

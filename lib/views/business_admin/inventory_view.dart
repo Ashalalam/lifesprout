@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../config/responsive_layout.dart';
@@ -75,11 +75,11 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
             children: [
               const Text(
                 'FEFO Inventory & Batch Register',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
               ),
               Row(
                 children: [
-                  // ── Add New Medicine ──────────────────────────────
+                  // â”€â”€ Add New Medicine â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.successGreen),
@@ -89,7 +89,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                     label: const Text('Add New Medicine'),
                   ),
                   const SizedBox(width: 8),
-                  // ── Add Stock to existing product ─────────────────
+                  // â”€â”€ Add Stock to existing product â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue),
@@ -164,11 +164,11 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                     ),
                     title: Text(
                       product.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
                       'Generic Salt: ${product.genericSalt} | HSN: ${product.hsnCode} | GST: ${product.taxPercent}% | Total Stock: ${product.totalStock}',
-                      style: const TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -230,8 +230,8 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                                   final expText = '${batch.expDate.month}/${batch.expDate.year}';
                                   return TableRow(
                                     children: [
-                                      Padding(padding: const EdgeInsets.all(6), child: Text(batch.batchNumber, style: const TextStyle(fontSize: 12))),
-                                      Padding(padding: const EdgeInsets.all(6), child: Text('${batch.mfgDate.month}/${batch.mfgDate.year}', style: const TextStyle(fontSize: 12))),
+                                      Padding(padding: EdgeInsets.all(6), child: Text(batch.batchNumber, style: TextStyle(fontSize: 12))),
+                                      Padding(padding: EdgeInsets.all(6), child: Text('${batch.mfgDate.month}/${batch.mfgDate.year}', style: TextStyle(fontSize: 12))),
                                       Padding(
                                         padding: const EdgeInsets.all(6),
                                         child: Text(
@@ -243,9 +243,9 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                                           ),
                                         ),
                                       ),
-                                      Padding(padding: const EdgeInsets.all(6), child: Text('₹${batch.mrp}', style: const TextStyle(fontSize: 12))),
-                                      Padding(padding: const EdgeInsets.all(6), child: Text('${batch.stockCount}', style: const TextStyle(fontSize: 12))),
-                                      Padding(padding: const EdgeInsets.all(6), child: Text(batch.rackLocation, style: const TextStyle(fontSize: 12))),
+                                      Padding(padding: EdgeInsets.all(6), child: Text('â‚¹${batch.mrp}', style: TextStyle(fontSize: 12))),
+                                      Padding(padding: EdgeInsets.all(6), child: Text('${batch.stockCount}', style: TextStyle(fontSize: 12))),
+                                      Padding(padding: EdgeInsets.all(6), child: Text(batch.rackLocation, style: TextStyle(fontSize: 12))),
                                     ],
                                   );
                                 }),
@@ -304,13 +304,13 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                             backgroundColor: Color(0xFFFFF3E0),
                             child: Icon(Icons.assignment_return, color: AppTheme.warningAmber),
                           ),
-                          title: Text('${rtv.rtvNumber} — ${rtv.productName}'),
+                          title: Text('${rtv.rtvNumber} â€” ${rtv.productName}'),
                           subtitle: Text(
                             'Supplier: ${rtv.supplierName} | Batch: ${rtv.batchNumber}\nQty Returned: ${rtv.quantity} | Reason: ${rtv.reason}',
-                            style: const TextStyle(fontSize: 12),
+                            style: TextStyle(fontSize: 12),
                           ),
                           trailing: Text(
-                            '₹${rtv.totalRefundAmount.toStringAsFixed(2)}',
+                            'â‚¹${rtv.totalRefundAmount.toStringAsFixed(2)}',
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.warningAmber),
                           ),
                         );
@@ -334,7 +334,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
             children: [
               const Text(
                 'Inter-Branch Stock Movement Register',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
               ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryBlue),
@@ -362,10 +362,10 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                             backgroundColor: Color(0xFFE3F2FD),
                             child: Icon(Icons.swap_horiz, color: AppTheme.primaryBlue),
                           ),
-                          title: Text('${trf.transferNumber} — ${trf.productName}'),
+                          title: Text('${trf.transferNumber} â€” ${trf.productName}'),
                           subtitle: Text(
-                            'From: ${trf.sourceBranch} ➔ To: ${trf.destinationBranch}\nBatch: ${trf.batchNumber} | Qty: ${trf.quantity}',
-                            style: const TextStyle(fontSize: 12),
+                            'From: ${trf.sourceBranch} âž” To: ${trf.destinationBranch}\nBatch: ${trf.batchNumber} | Qty: ${trf.quantity}',
+                            style: TextStyle(fontSize: 12),
                           ),
                           trailing: Chip(
                             label: Text(trf.status),
@@ -520,13 +520,13 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
   }
 }
 
-  // ─────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // ADD NEW MEDICINE DIALOG
   // Creates a brand-new product entry with its first batch
-  // ─────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showAddMedicineDialog(
       BuildContext context, InventoryProvider inventoryProvider) {
-    // ── Product fields ──
+    // â”€â”€ Product fields â”€â”€
     final nameCtrl         = TextEditingController();
     final saltCtrl         = TextEditingController();
     final barcodeCtrl      = TextEditingController();
@@ -537,7 +537,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
     bool isScheduleH1      = false;
     bool isNarcotic        = false;
 
-    // ── First batch fields ──
+    // â”€â”€ First batch fields â”€â”€
     final batchNoCtrl  = TextEditingController();
     final mrpCtrl      = TextEditingController();
     final wsCtrl       = TextEditingController();
@@ -565,7 +565,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ─ Section: Product Details ─────────────────────────────
+                  // â”€ Section: Product Details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                   _sectionHeader('Product Details'),
                   const SizedBox(height: 8),
                   TextField(
@@ -662,7 +662,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                   const Divider(),
                   const SizedBox(height: 8),
 
-                  // ─ Section: First Batch / Opening Stock ─────────────────
+                  // â”€ Section: First Batch / Opening Stock â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                   _sectionHeader('Opening Stock Batch'),
                   const SizedBox(height: 8),
                   Row(children: [
@@ -714,7 +714,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                         controller: mrpCtrl,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'MRP per unit (₹) *'),
+                            labelText: 'MRP per unit (â‚¹) *'),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -723,7 +723,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                         controller: ppCtrl,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'Purchase Price (₹)'),
+                            labelText: 'Purchase Price (â‚¹)'),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -732,7 +732,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                         controller: wsCtrl,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'Wholesale Price (₹)'),
+                            labelText: 'Wholesale Price (â‚¹)'),
                       ),
                     ),
                   ]),
@@ -786,7 +786,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
               style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.successGreen),
               onPressed: () {
-                // ── Validation ────────────────────────────────────────────
+                // â”€â”€ Validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 if (nameCtrl.text.trim().isEmpty) {
                   _showSnack(context, 'Enter medicine name.', isError: true);
                   return;
@@ -806,7 +806,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                   return;
                 }
 
-                // ── Parse dates ───────────────────────────────────────────
+                // â”€â”€ Parse dates â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 DateTime? expDate;
                 DateTime? mfgDate;
                 try {
@@ -820,7 +820,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                   return;
                 }
 
-                // ── Build batch ────────────────────────────────────────────
+                // â”€â”€ Build batch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 final batch = BatchModel(
                   id: 'b_${DateTime.now().millisecondsSinceEpoch}',
                   batchNumber: batchNoCtrl.text.trim(),
@@ -835,7 +835,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                       : rackCtrl.text.trim(),
                 );
 
-                // ── Build product ──────────────────────────────────────────
+                // â”€â”€ Build product â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 final product = ProductModel(
                   id: 'prod_${DateTime.now().millisecondsSinceEpoch}',
                   name: nameCtrl.text.trim(),
@@ -860,7 +860,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                 Navigator.pop(ctx);
                 _showSnack(
                     context,
-                    '✅ ${product.name} added to inventory with '
+                    'âœ… ${product.name} added to inventory with '
                     '${batch.stockCount} units in batch ${batch.batchNumber}.');
               },
               icon: const Icon(Icons.save),
@@ -872,9 +872,9 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // ADD STOCK / NEW BATCH TO EXISTING PRODUCT DIALOG
-  // ─────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showAddStockDialog(
     BuildContext context,
     InventoryProvider inventoryProvider, {
@@ -970,7 +970,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                     const SizedBox(height: 14),
 
                     if (addNewBatch) ...[
-                      // ── New batch fields ──────────────────────────────
+                      // â”€â”€ New batch fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                       Row(children: [
                         Expanded(
                           child: TextField(
@@ -1020,7 +1020,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                             controller: mrpCtrl,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                labelText: 'MRP per unit (₹) *'),
+                                labelText: 'MRP per unit (â‚¹) *'),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -1029,7 +1029,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                             controller: ppCtrl,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                labelText: 'Purchase Price (₹)'),
+                                labelText: 'Purchase Price (â‚¹)'),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -1038,7 +1038,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                             controller: wsCtrl,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                labelText: 'Wholesale Price (₹)'),
+                                labelText: 'Wholesale Price (â‚¹)'),
                           ),
                         ),
                       ]),
@@ -1050,7 +1050,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                             hintText: 'e.g. Rack A-1'),
                       ),
                     ] else ...[
-                      // ── Top-up existing batch ─────────────────────────
+                      // â”€â”€ Top-up existing batch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                       if (selectedProduct.batches.isEmpty)
                         const Text(
                           'No batches found for this product. Add a new batch instead.',
@@ -1095,8 +1095,8 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                                                 fontSize: 13),
                                           ),
                                           Text(
-                                            'MRP: ₹${b.mrp}  •  '
-                                            'Exp: ${b.expDate.month}/${b.expDate.year}  •  '
+                                            'MRP: â‚¹${b.mrp}  â€¢  '
+                                            'Exp: ${b.expDate.month}/${b.expDate.year}  â€¢  '
                                             'Stock: ${b.stockCount}',
                                             style: const TextStyle(
                                                 fontSize: 11,
@@ -1201,7 +1201,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
                     Navigator.pop(ctx);
                     _showSnack(
                         context,
-                        '✅ Batch ${newBatch.batchNumber} added — '
+                        'âœ… Batch ${newBatch.batchNumber} added â€” '
                         '${newBatch.stockCount} units stocked in.');
                   },
                   icon: const Icon(Icons.save),
@@ -1231,9 +1231,9 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
           children: [
             Text(
               'Current stock: ${batch.stockCount} units\n'
-              'MRP: ₹${batch.mrp}  •  '
+              'MRP: â‚¹${batch.mrp}  â€¢  '
               'Exp: ${batch.expDate.month}/${batch.expDate.year}',
-              style: const TextStyle(color: AppTheme.textMuted),
+              style: TextStyle(fontSize: 13, color: AppTheme.textMuted),
             ),
             const SizedBox(height: 14),
             TextField(
@@ -1269,7 +1269,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
               Navigator.pop(ctx); // close top-up dialog
               Navigator.pop(context); // close add-stock dialog
               _showSnack(context,
-                  '✅ $qty units added to batch ${batch.batchNumber}. '
+                  'âœ… $qty units added to batch ${batch.batchNumber}. '
                   'New stock: ${batch.stockCount} units.');
             },
             child: const Text('Confirm Add Stock'),
@@ -1279,7 +1279,7 @@ class _InventoryViewState extends State<InventoryView> with SingleTickerProvider
     );
   }
 
-  // ── Shared helpers ────────────────────────────────────────────────────────
+  // â”€â”€ Shared helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _sectionHeader(String text) {
     return Text(
       text,

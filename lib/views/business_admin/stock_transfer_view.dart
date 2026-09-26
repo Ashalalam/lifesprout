@@ -382,7 +382,7 @@ class _TransferTile extends StatelessWidget {
       ),
       title: Text(
         '${transfer.transferNumber} â€” ${transfer.productName}',
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
         '${transfer.sourceBranch}  â†’  ${transfer.destinationBranch}\n'

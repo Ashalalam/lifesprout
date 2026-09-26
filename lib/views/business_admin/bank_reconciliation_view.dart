@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../config/responsive_layout.dart';
@@ -37,13 +37,13 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
 
   static List<BankStatementEntry> _seedBankEntries() => [
         BankStatementEntry(id: 'be_001', date: DateTime.now().subtract(const Duration(days: 2)),
-            description: 'NEFT Credit — Pharmacy Sales', amount: 4500.00, isCredit: true),
+            description: 'NEFT Credit â€” Pharmacy Sales', amount: 4500.00, isCredit: true),
         BankStatementEntry(id: 'be_002', date: DateTime.now().subtract(const Duration(days: 2)),
-            description: 'UPI Debit — LIFESPROUT Pharma Labs', amount: 11250.00, isCredit: false),
+            description: 'UPI Debit â€” LIFESPROUT Pharma Labs', amount: 11250.00, isCredit: false),
         BankStatementEntry(id: 'be_003', date: DateTime.now().subtract(const Duration(days: 1)),
-            description: 'IMPS Credit — Wholesale Customer', amount: 28600.00, isCredit: true),
+            description: 'IMPS Credit â€” Wholesale Customer', amount: 28600.00, isCredit: true),
         BankStatementEntry(id: 'be_004', date: DateTime.now(),
-            description: 'UPI Credit — POS Terminal', amount: 1850.00, isCredit: true),
+            description: 'UPI Credit â€” POS Terminal', amount: 1850.00, isCredit: true),
       ];
 
   @override
@@ -63,7 +63,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ──────────────────────────────────────────────────
+            // â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             PageHeader(
               title: 'Bank Statement Reconciliation',
               subtitle: 'Match bank transactions against your General Ledger',
@@ -76,17 +76,17 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
             ),
             const SizedBox(height: 16),
 
-            // ── KPI row — wraps to 2×3 on mobile ─────────────────────
+            // â”€â”€ KPI row â€” wraps to 2Ã—3 on mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             KpiRow(kpis: [
-              _kpiCard('Bank Credits',  '₹${credits.toStringAsFixed(2)}', Icons.arrow_downward, AppTheme.successGreen),
-              _kpiCard('Bank Debits',   '₹${debits.toStringAsFixed(2)}',  Icons.arrow_upward,   AppTheme.errorRed),
-              _kpiCard('Net Balance',   '₹${net.toStringAsFixed(2)}',     Icons.account_balance, AppTheme.primaryBlue),
+              _kpiCard('Bank Credits',  'â‚¹${credits.toStringAsFixed(2)}', Icons.arrow_downward, AppTheme.successGreen),
+              _kpiCard('Bank Debits',   'â‚¹${debits.toStringAsFixed(2)}',  Icons.arrow_upward,   AppTheme.errorRed),
+              _kpiCard('Net Balance',   'â‚¹${net.toStringAsFixed(2)}',     Icons.account_balance, AppTheme.primaryBlue),
               _kpiCard('Matched',       '$matched / ${_bankEntries.length}', Icons.check_circle, AppTheme.successGreen),
               _kpiCard('Unmatched',     '$unmatched',                     Icons.warning_amber,  AppTheme.warningAmber),
             ]),
             const SizedBox(height: 16),
 
-            // ── Split view — stacks on mobile ─────────────────────────
+            // â”€â”€ Split view â€” stacks on mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -99,7 +99,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
               ),
             ),
 
-            // ── Unmatched warning ─────────────────────────────────────
+            // â”€â”€ Unmatched warning â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             if (unmatched > 0) ...[
               const SizedBox(height: 12),
               Container(
@@ -129,7 +129,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
     );
   }
 
-  // ── Desktop: side-by-side ─────────────────────────────────────────────────
+  // â”€â”€ Desktop: side-by-side â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _buildDesktopSplit(BuildContext context, List<LedgerEntryModel> ledger) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +141,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
     );
   }
 
-  // ── Mobile: tabbed ────────────────────────────────────────────────────────
+  // â”€â”€ Mobile: tabbed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _buildMobileSplit(BuildContext context, List<LedgerEntryModel> ledger) {
     return DefaultTabController(
       length: 2,
@@ -169,7 +169,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
     );
   }
 
-  // ── Bank statement panel ──────────────────────────────────────────────────
+  // â”€â”€ Bank statement panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _bankPanel(BuildContext context, List<LedgerEntryModel> ledger) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,13 +203,13 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
                       maxLines: 1, overflow: TextOverflow.ellipsis),
                   subtitle: Text(
                       '${entry.date.day}/${entry.date.month}/${entry.date.year}',
-                      style: const TextStyle(fontSize: 11)),
+                      style: TextStyle(fontSize: 11)),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${entry.isCredit ? '+' : '-'}₹${entry.amount.toStringAsFixed(2)}',
+                        '${entry.isCredit ? '+' : '-'}â‚¹${entry.amount.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
@@ -217,13 +217,13 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
                         ),
                       ),
                       if (entry.isMatched)
-                        const Text('✓ Matched',
+                        const Text('âœ“ Matched',
                             style: TextStyle(fontSize: 10, color: AppTheme.successGreen))
                       else
                         TextButton(
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                           onPressed: () => _showMatchDialog(context, entry, ledger),
-                          child: const Text('Match', style: TextStyle(fontSize: 11)),
+                          child: Text('Match', style: TextStyle(fontSize: 11)),
                         ),
                     ],
                   ),
@@ -236,7 +236,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
     );
   }
 
-  // ── Ledger panel ──────────────────────────────────────────────────────────
+  // â”€â”€ Ledger panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _ledgerPanel(List<LedgerEntryModel> ledger) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,10 +275,10 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
                             maxLines: 1, overflow: TextOverflow.ellipsis),
                         subtitle: Text(
                           '${entry.description}\n${entry.date.toString().substring(0, 10)}',
-                          style: const TextStyle(fontSize: 11),
+                          style: TextStyle(fontSize: 11),
                         ),
                         trailing: Text(
-                          '${isCredit ? '+' : '-'}₹${entry.amount.toStringAsFixed(2)}',
+                          '${isCredit ? '+' : '-'}â‚¹${entry.amount.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -294,7 +294,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
     );
   }
 
-  // ── Dialogs ───────────────────────────────────────────────────────────────
+  // â”€â”€ Dialogs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showMatchDialog(BuildContext context, BankStatementEntry bankEntry,
       List<LedgerEntryModel> ledger) {
     showDialog(
@@ -315,9 +315,9 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  'Bank: ${bankEntry.description}  •  '
-                  '${bankEntry.isCredit ? '+' : '-'}₹${bankEntry.amount.toStringAsFixed(2)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  'Bank: ${bankEntry.description}  â€¢  '
+                  '${bankEntry.isCredit ? '+' : '-'}â‚¹${bankEntry.amount.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 12),
@@ -335,10 +335,10 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
                       dense: true,
                       enabled: !alreadyLinked,
                       title: Text(entry.accountName,
-                          style: const TextStyle(fontSize: 12)),
+                          style: TextStyle(fontSize: 12)),
                       subtitle: Text(
-                          '${entry.type.name}  •  ₹${entry.amount.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 11)),
+                          '${entry.type.name}  â€¢  â‚¹${entry.amount.toStringAsFixed(2)}',
+                          style: TextStyle(fontSize: 11)),
                       trailing: alreadyLinked
                           ? const Text('Matched',
                               style: TextStyle(fontSize: 10, color: AppTheme.successGreen))
@@ -352,7 +352,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
                               });
                               Navigator.pop(ctx);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Entries matched ✓'),
+                                const SnackBar(content: Text('Entries matched âœ“'),
                                     backgroundColor: AppTheme.successGreen),
                               );
                             },
@@ -395,7 +395,7 @@ class _BankReconciliationViewState extends State<BankReconciliationView> {
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Bank statement imported — 4 entries loaded.'),
+                  content: Text('Bank statement imported â€” 4 entries loaded.'),
                   backgroundColor: AppTheme.successGreen,
                 ),
               );

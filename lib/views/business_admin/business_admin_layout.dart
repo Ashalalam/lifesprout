@@ -14,6 +14,7 @@ import 'gst_accounting_view.dart';
 import 'stock_transfer_view.dart';
 import 'purchase_order_view.dart';
 import 'bank_reconciliation_view.dart';
+import 'sales_dashboard_view.dart';
 
 class BusinessAdminLayout extends StatefulWidget {
   const BusinessAdminLayout({super.key});
@@ -27,6 +28,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
   String _industryMode = 'Pharma Mode';
 
   static const _destinations = [
+    _NavDest(Icons.dashboard_outlined,             'Dashboard'),
     _NavDest(Icons.point_of_sale,                  'POS Billing'),
     _NavDest(Icons.inventory_2_outlined,            'Inventory'),
     _NavDest(Icons.verified_outlined,               'Schedule H'),
@@ -37,6 +39,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
   ];
 
   final List<Widget> _views = [
+    const SalesDashboardView(),
     const PosBillingView(), const InventoryView(), const ScheduleHRegisterView(),
     const GstAccountingView(), const StockTransferView(), const PurchaseOrderView(),
     const BankReconciliationView(),
@@ -122,7 +125,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
               enabled: false,
               child: Text(
                 '${auth.currentUser?.name ?? ''}\n${auth.currentUser?.roleDisplay ?? ''}',
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12),
               ),
             ),
             const PopupMenuDivider(),
@@ -178,7 +181,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
                 children: [
                   ..._destinations.asMap().entries.map((e) {
                     final isSelected = _selectedIndex == e.key;
-                    final color = e.key == 2 ? AppTheme.errorRed : AppTheme.primaryBlue;
+                    final color = e.key == 3 ? AppTheme.errorRed : AppTheme.primaryBlue;
                     return ListTile(
                       selected: isSelected,
                       selectedTileColor: AppTheme.primaryBlue.withValues(alpha: 0.08),
@@ -273,7 +276,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
                             ? AppTheme.errorRed
                             : AppTheme.primaryBlue),
                     label: Text(e.value.label,
-                        style: const TextStyle(fontSize: 11)),
+                        style: TextStyle(fontSize: 11)),
                   ))
               .toList(),
           trailing: Expanded(

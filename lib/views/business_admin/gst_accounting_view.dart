@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../models/ledger_entry_model.dart';
@@ -76,11 +76,11 @@ class _GstAccountingViewState extends State<GstAccountingView> with SingleTicker
                 children: const [
                   Text(
                     'General Ledger Audit Trail',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
                   ),
                   Text(
                     'Real-time Double-Entry Debit/Credit Records',
-                    style: TextStyle(color: AppTheme.textMuted, fontSize: 13),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
                   ),
                 ],
               ),
@@ -110,10 +110,10 @@ class _GstAccountingViewState extends State<GstAccountingView> with SingleTicker
                         color: isCredit ? AppTheme.successGreen : AppTheme.errorRed,
                       ),
                     ),
-                    title: Text(entry.accountName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(entry.accountName, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                     subtitle: Text('${entry.description} | Ref: ${entry.referenceId}\nDate: ${entry.date.toString().substring(0, 16)}'),
                     trailing: Text(
-                      '${isCredit ? "+" : "-"}₹${entry.amount.toStringAsFixed(2)}',
+                      '${isCredit ? "+" : "-"}â‚¹${entry.amount.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -138,7 +138,7 @@ class _GstAccountingViewState extends State<GstAccountingView> with SingleTicker
         children: [
           const Text(
             'GST Tax Returns (GSTR-1 & GSTR-3B Exporters)',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
           ),
           const SizedBox(height: 16),
 
@@ -214,7 +214,7 @@ class _GstAccountingViewState extends State<GstAccountingView> with SingleTicker
         children: [
           const Text(
             'Bank Statement Reconciliation & Chart of Accounts (COA)',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
           ),
           const SizedBox(height: 16),
 
@@ -249,7 +249,7 @@ class _GstAccountingViewState extends State<GstAccountingView> with SingleTicker
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Bank Statement Reconciliation', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                          Text('Bank Statement Reconciliation', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
                           const Divider(),
                           const Text('Upload bank CSV/OFX statement to automatically reconcile UPI and Card settlements with POS receipts:'),
                           const SizedBox(height: 16),
@@ -336,12 +336,12 @@ class _GstAccountingViewState extends State<GstAccountingView> with SingleTicker
           children: [
             const Text('Summary for GSTIN: 07AAAAA0000A1Z5', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
-            _summaryRow('Total Outward Taxable Value:', '₹${accounting.salesInvoices.fold(0.0, (s, i) => s + i.subtotal).toStringAsFixed(2)}'),
-            _summaryRow('Output IGST Payable:', '₹0.00'),
-            _summaryRow('Output CGST Payable (6%):', '₹${(accounting.salesInvoices.fold(0.0, (s, i) => s + i.totalTax) / 2).toStringAsFixed(2)}'),
-            _summaryRow('Output SGST Payable (6%):', '₹${(accounting.salesInvoices.fold(0.0, (s, i) => s + i.totalTax) / 2).toStringAsFixed(2)}'),
+            _summaryRow('Total Outward Taxable Value:', 'â‚¹${accounting.salesInvoices.fold(0.0, (s, i) => s + i.subtotal).toStringAsFixed(2)}'),
+            _summaryRow('Output IGST Payable:', 'â‚¹0.00'),
+            _summaryRow('Output CGST Payable (6%):', 'â‚¹${(accounting.salesInvoices.fold(0.0, (s, i) => s + i.totalTax) / 2).toStringAsFixed(2)}'),
+            _summaryRow('Output SGST Payable (6%):', 'â‚¹${(accounting.salesInvoices.fold(0.0, (s, i) => s + i.totalTax) / 2).toStringAsFixed(2)}'),
             const Divider(),
-            _summaryRow('Net Tax Liability:', '₹${accounting.salesInvoices.fold(0.0, (s, i) => s + i.totalTax).toStringAsFixed(2)}', isBold: true),
+            _summaryRow('Net Tax Liability:', 'â‚¹${accounting.salesInvoices.fold(0.0, (s, i) => s + i.totalTax).toStringAsFixed(2)}', isBold: true),
           ],
         ),
         actions: [

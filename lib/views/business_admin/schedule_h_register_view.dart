@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../config/responsive_layout.dart';
@@ -20,7 +20,7 @@ class ScheduleHRegisterView extends StatelessWidget {
           children: [
             PageHeader(
               title: 'Schedule H / H1 & Narcotic Regulatory Register',
-              subtitle: 'Statutory Drug Inspector Audit Logs — Protected by Pharmacist PIN Approval',
+              subtitle: 'Statutory Drug Inspector Audit Logs â€” Protected by Pharmacist PIN Approval',
               action: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
                 onPressed: () {},
@@ -72,10 +72,10 @@ class ScheduleHRegisterView extends StatelessWidget {
                             title: Text('Invoice #${inv.invoiceNumber} - ${inv.customerName}'),
                             subtitle: Text(
                               'Prescribed By: Dr. ${inv.doctorName ?? "N/A"} (MCI: ${inv.doctorMciNo ?? "N/A"})\nPharmacist Approved: ${inv.pharmacistPinApprovedBy ?? "Yes (PIN Verified)"}',
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 12),
                             ),
                             trailing: Text(
-                              '₹${inv.grandTotal.toStringAsFixed(2)}',
+                              'â‚¹${inv.grandTotal.toStringAsFixed(2)}',
                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                             ),
                           );
