@@ -10,19 +10,51 @@ class InventoryProvider extends ChangeNotifier {
   final List<ProductModel> _products = [];
   final List<RtvNoteModel> _rtvNotes = [];
   final List<StockTransferModel> _transfers = [];
-  String _pricingTier = 'Retail'; // Retail, Wholesale, Distributor, Loyalty
+  String _pricingTier = 'Retail'; // mutable — user can switch tier at runtime
 
   List<ProductModel> get products => List.unmodifiable(_products);
   List<RtvNoteModel> get rtvNotes => List.unmodifiable(_rtvNotes);
   List<StockTransferModel> get transfers => List.unmodifiable(_transfers);
   String get pricingTier => _pricingTier;
 
+  void setPricingTier(String tier) {
+    _pricingTier = tier;
+    notifyListeners();
+  }
+
   InventoryProvider() {
     _loadFromDisk();
   }
 
-  void setPricingTier(String tier) {
-    _pricingTier = tier;
+  /// Adds a brand-new product to the catalogue and persists to disk.
+  void addProduct(ProductModel product) {
+    _products.add(product);
+    _saveToDisk();
+    notifyListeners();
+  }
+
+  /// Adds a new [batch] to an existing product and persists to disk.
+  void addBatchToProduct(String productId, BatchModel batch) {
+    final index = _products.indexWhere((p) => p.id == productId);
+    if (index < 0) return;
+    _products[index].batches.add(batch);
+    _saveToDisk();
+    notifyListeners();
+  }
+
+  /// Update stock quantity for an existing batch (e.g. stock-in).
+  void addStockToBatch({
+    required String productId,
+    required String batchId,
+    required int additionalQty,
+  }) {
+    final pIdx = _products.indexWhere((p) => p.id == productId);
+    if (pIdx < 0) return;
+    final bIdx =
+        _products[pIdx].batches.indexWhere((b) => b.id == batchId);
+    if (bIdx < 0) return;
+    _products[pIdx].batches[bIdx].stockCount += additionalQty;
+    _saveToDisk();
     notifyListeners();
   }
 
