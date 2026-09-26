@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_config.dart';
 import '../../config/app_theme.dart';
@@ -61,13 +61,13 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
     );
   }
 
-  // ── AppBar ────────────────────────────────────────────────────────────────
+  // â”€â”€ AppBar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   PreferredSizeWidget _appBar(AuthProvider auth, OtaService ota, bool isMobile) {
     return AppBar(
       title: Row(
         children: [
           Image.asset(
-            'assets/images/lifesprout_logo.jpg',
+            'assets/images/lifesprout_logo.png',
             height: 30,
             errorBuilder: (_, __, ___) =>
                 const Icon(Icons.local_pharmacy, color: Colors.white, size: 26),
@@ -78,7 +78,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isMobile ? AppConfig.appName : '${AppConfig.appName} — Store Operations',
+                  isMobile ? AppConfig.appName : '${AppConfig.appName} â€” Store Operations',
                   style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     fontWeight: FontWeight.bold,
@@ -137,7 +137,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
     );
   }
 
-  // ── Mobile Drawer (all 7 nav items) ──────────────────────────────────────
+  // â”€â”€ Mobile Drawer (all 7 nav items) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _drawer(BuildContext context, AuthProvider auth) {
     return Drawer(
       child: SafeArea(
@@ -152,7 +152,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    'assets/images/lifesprout_logo.jpg',
+                    'assets/images/lifesprout_logo.png',
                     height: 44,
                     errorBuilder: (_, __, ___) =>
                         const Icon(Icons.local_pharmacy, color: Colors.white, size: 40),
@@ -231,7 +231,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
     );
   }
 
-  // ── Mobile Bottom Nav (first 4 items) ─────────────────────────────────────
+  // â”€â”€ Mobile Bottom Nav (first 4 items) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _bottomNav() {
     return BottomNavigationBar(
       currentIndex: _selectedIndex < _bottomNavCount ? _selectedIndex : 0,
@@ -251,7 +251,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
     );
   }
 
-  // ── Desktop body with NavigationRail ──────────────────────────────────────
+  // â”€â”€ Desktop body with NavigationRail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _desktopBody() {
     return Row(
       children: [
@@ -296,7 +296,7 @@ class _BusinessAdminLayoutState extends State<BusinessAdminLayout> {
     );
   }
 
-  // ── Dialogs ───────────────────────────────────────────────────────────────
+  // â”€â”€ Dialogs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showOtaModal(OtaService ota) {
     showDialog(
       context: context,

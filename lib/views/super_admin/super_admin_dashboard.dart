@@ -1,4 +1,4 @@
-import 'package:fl_chart/fl_chart.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_config.dart';
@@ -46,7 +46,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard>
           children: const [
             Icon(Icons.admin_panel_settings, color: AppTheme.accentOrange),
             SizedBox(width: 10),
-            Text('BillSprout — Super Admin SaaS Portal'),
+            Text('BillSprout â€” Super Admin SaaS Portal'),
           ],
         ),
         actions: [
@@ -118,7 +118,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard>
     );
   }
 
-  // ── Add Tenant Dialog ─────────────────────────────────────────────────────
+  // â”€â”€ Add Tenant Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showAddTenantDialog(BuildContext context) {
     final nameCtrl = TextEditingController();
     final ownerCtrl = TextEditingController();
@@ -205,7 +205,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard>
     );
   }
 
-  // ── Supabase Config Modal ─────────────────────────────────────────────────
+  // â”€â”€ Supabase Config Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showSupabaseConfigModal(BuildContext context) {
     final urlCtrl = TextEditingController(
         text: 'https://your-project-ref.supabase.co');
@@ -274,9 +274,9 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tab 1 — Overview
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Tab 1 â€” Overview
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _OverviewTab extends StatelessWidget {
   final SuperAdminProvider superAdmin;
   final OtaService ota;
@@ -315,7 +315,7 @@ class _OverviewTab extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  'assets/images/lifesprout_logo.jpg',
+                  'assets/images/lifesprout_logo.png',
                   height: 60,
                   errorBuilder: (_, __, ___) =>
                       const Icon(Icons.star, color: Colors.white, size: 50),
@@ -335,7 +335,7 @@ class _OverviewTab extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Multi-Tenant Accounts · OTA Updates · Supabase Real-time Replication',
+                        'Multi-Tenant Accounts Â· OTA Updates Â· Supabase Real-time Replication',
                         style: TextStyle(color: Colors.white70, fontSize: 13),
                       ),
                     ],
@@ -353,7 +353,7 @@ class _OverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // KPI cards — responsive wrap on mobile
+          // KPI cards â€” responsive wrap on mobile
           KpiRow(kpis: [
             _MetricCard(
               title: 'Active Client Companies',
@@ -364,7 +364,7 @@ class _OverviewTab extends StatelessWidget {
             ),
             _MetricCard(
               title: 'Platform Revenue',
-              value: '₹${displayRevenue.toStringAsFixed(0)}',
+              value: 'â‚¹${displayRevenue.toStringAsFixed(0)}',
               icon: Icons.payments,
               color: AppTheme.successGreen,
               subtitle: realRevenue > 0 ? 'Live POS data' : 'Monthly SaaS',
@@ -419,8 +419,8 @@ class _OverviewTab extends StatelessWidget {
                 Expanded(
                   child: Text(
                     AppConfig.supabaseConfigured
-                        ? 'Supabase PostgreSQL: Connected — Real-time replication active 🟢'
-                        : 'Supabase not configured — running in DEMO mode. '
+                        ? 'Supabase PostgreSQL: Connected â€” Real-time replication active ðŸŸ¢'
+                        : 'Supabase not configured â€” running in DEMO mode. '
                             'Update AppConfig.supabaseUrl & supabaseAnonKey.',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -474,9 +474,9 @@ class _OverviewTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tab 2 — Tenant Accounts
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Tab 2 â€” Tenant Accounts
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _TenantsTab extends StatelessWidget {
   final SuperAdminProvider superAdmin;
   final VoidCallback onAddTenant;
@@ -506,8 +506,8 @@ class _TenantsTab extends StatelessWidget {
                 children: [
                   Text(
                     AppConfig.supabaseConfigured
-                        ? 'Supabase Replication: Active 🟢'
-                        : 'Demo Mode 🟡',
+                        ? 'Supabase Replication: Active ðŸŸ¢'
+                        : 'Demo Mode ðŸŸ¡',
                     style: TextStyle(
                       color: AppConfig.supabaseConfigured
                           ? AppTheme.successGreen
@@ -554,9 +554,9 @@ class _TenantsTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tab 3 — Analytics — wired to real AccountingProvider + SuperAdminProvider
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Tab 3 â€” Analytics â€” wired to real AccountingProvider + SuperAdminProvider
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _AnalyticsTab extends StatelessWidget {
   final SuperAdminProvider superAdmin;
   final AccountingProvider accounting;
@@ -579,7 +579,7 @@ class _AnalyticsTab extends StatelessWidget {
     AppTheme.errorRed,
   ];
 
-  /// Build monthly revenue bars — real data for current month, backfill
+  /// Build monthly revenue bars â€” real data for current month, backfill
   /// preceding months with seeded progression so chart is always populated.
   List<double> _buildMonthlyRevenue() {
     // Real total from accounting provider
@@ -637,7 +637,7 @@ class _AnalyticsTab extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Revenue trends · Tenant mix · Store growth — wired to live data',
+                      'Revenue trends Â· Tenant mix Â· Store growth â€” wired to live data',
                       style: TextStyle(
                           color: AppTheme.textMuted, fontSize: 13),
                     ),
@@ -649,8 +649,8 @@ class _AnalyticsTab extends StatelessWidget {
                   avatar: const Icon(Icons.circle,
                       color: AppTheme.successGreen, size: 10),
                   label: Text(
-                    'Live: ${accounting.salesInvoices.length} invoices · '
-                    '₹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.grandTotal).toStringAsFixed(0)} total',
+                    'Live: ${accounting.salesInvoices.length} invoices Â· '
+                    'â‚¹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.grandTotal).toStringAsFixed(0)} total',
                     style: const TextStyle(fontSize: 11),
                   ),
                 ),
@@ -658,7 +658,7 @@ class _AnalyticsTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Row 1: Revenue bar + industry pie — stacks on mobile
+          // Row 1: Revenue bar + industry pie â€” stacks on mobile
           LayoutBuilder(builder: (context, constraints) {
             final isNarrow = constraints.maxWidth < Bp.mobile;
             final children = [
@@ -679,7 +679,7 @@ class _AnalyticsTab extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Oct 2025 — Sep 2026  '
+                          'Oct 2025 â€” Sep 2026  '
                           '${accounting.salesInvoices.isNotEmpty ? '(current month shows real POS data)' : '(seeded progression)'}',
                           style: const TextStyle(
                               fontSize: 11, color: AppTheme.textMuted),
@@ -696,7 +696,7 @@ class _AnalyticsTab extends StatelessWidget {
                                   tooltipRoundedRadius: 6,
                                   getTooltipItem: (g, gi, rod, ri) =>
                                       BarTooltipItem(
-                                    '₹${rod.toY.toStringAsFixed(1)}K',
+                                    'â‚¹${rod.toY.toStringAsFixed(1)}K',
                                     const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -728,7 +728,7 @@ class _AnalyticsTab extends StatelessWidget {
                                     reservedSize: 42,
                                     interval: maxY / 4,
                                     getTitlesWidget: (val, meta) => Text(
-                                      '₹${val.toInt()}K',
+                                      'â‚¹${val.toInt()}K',
                                       style: const TextStyle(
                                           fontSize: 9,
                                           color: AppTheme.textMuted),
@@ -781,7 +781,7 @@ class _AnalyticsTab extends StatelessWidget {
               ),
               const SizedBox(width: 16),
 
-              // Pie chart — from real tenant industry data
+              // Pie chart â€” from real tenant industry data
               Expanded(
                 flex: 2,
                 child: Card(
@@ -1032,19 +1032,19 @@ class _AnalyticsTab extends StatelessWidget {
                       children: [
                         _gstKpi(
                           'Total Sales',
-                          '₹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.grandTotal).toStringAsFixed(2)}',
+                          'â‚¹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.grandTotal).toStringAsFixed(2)}',
                           AppTheme.primaryBlue,
                         ),
                         const SizedBox(width: 12),
                         _gstKpi(
                           'GST Collected',
-                          '₹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.totalTax).toStringAsFixed(2)}',
+                          'â‚¹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + inv.totalTax).toStringAsFixed(2)}',
                           AppTheme.errorRed,
                         ),
                         const SizedBox(width: 12),
                         _gstKpi(
                           'Net Taxable',
-                          '₹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + (inv.grandTotal - inv.totalTax)).toStringAsFixed(2)}',
+                          'â‚¹${accounting.salesInvoices.fold<double>(0, (s, inv) => s + (inv.grandTotal - inv.totalTax)).toStringAsFixed(2)}',
                           AppTheme.successGreen,
                         ),
                       ],
@@ -1096,9 +1096,9 @@ class _AnalyticsTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Shared widgets
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _MetricCard extends StatelessWidget {
   final String title;
   final String value;
@@ -1186,9 +1186,9 @@ class _TenantListTile extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(
         showFullDetails
-            ? 'Owner: ${tenant.ownerName}  •  ${tenant.industryType}  •  GSTIN: ${tenant.gstin}\n'
-                '${tenant.email}  •  ${tenant.phone}'
-            : 'Owner: ${tenant.ownerName}  •  ${tenant.industryType}',
+            ? 'Owner: ${tenant.ownerName}  â€¢  ${tenant.industryType}  â€¢  GSTIN: ${tenant.gstin}\n'
+                '${tenant.email}  â€¢  ${tenant.phone}'
+            : 'Owner: ${tenant.ownerName}  â€¢  ${tenant.industryType}',
         style: const TextStyle(fontSize: 12, height: 1.4),
       ),
       trailing: Row(

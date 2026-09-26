@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import '../models/customer_model.dart';
 import '../models/invoice_model.dart';
 
@@ -15,7 +15,7 @@ class CustomerProvider extends ChangeNotifier {
         doctorName: 'Dr. Arthur Conan',
         doctorMci: 'MCI-99410',
         uploadDate: DateTime.now().subtract(const Duration(days: 15)),
-        imageUrl: 'assets/images/lifesprout_logo.jpg',
+        imageUrl: 'assets/images/lifesprout_logo.png',
         prescribedMedications: ['Metformin 500mg SR', 'Amoxicillin 500mg'],
       ),
     ],

@@ -67,6 +67,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/lifesprout_logo.jpg
+    - assets/images/lifesprout_logo.png
 
 
   # To add assets to your application, add an assets section, like this:

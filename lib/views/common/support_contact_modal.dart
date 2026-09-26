@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../config/app_config.dart';
 import '../../config/app_theme.dart';
 import '../../services/support_service.dart';
@@ -36,7 +36,7 @@ class SupportContactModal extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Image.asset(
-            'assets/images/lifesprout_logo.jpg',
+            'assets/images/lifesprout_logo.png',
             height: 60,
             errorBuilder: (_, __, ___) => const Icon(Icons.medical_services, size: 50, color: AppTheme.primaryBlue),
           ),
