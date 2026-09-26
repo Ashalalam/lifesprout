@@ -20,17 +20,27 @@ class _LoginViewState extends State<LoginView>
   UserRole _selectedRole = UserRole.businessAdmin;
   bool _isLoading = false;
   String? _errorMessage;
+  String? _successMessage;
 
-  // ── No pre-filled values — user types their own credentials ──────────────
+  // Sign-in fields
   final _emailCtrl    = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool _obscurePassword = true;
+
+  // Register fields (Customer only)
+  bool _showRegister = false;
+  final _regNameCtrl    = TextEditingController();
+  final _regPhoneCtrl   = TextEditingController();
+  final _regEmailCtrl   = TextEditingController();
+  final _regPasswordCtrl    = TextEditingController();
+  final _regConfirmCtrl = TextEditingController();
+  bool _obscureRegPassword = true;
+  bool _obscureConfirm     = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    // Fields intentionally blank — no pre-fill
   }
 
   @override
@@ -38,6 +48,11 @@ class _LoginViewState extends State<LoginView>
     _tabController.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _regNameCtrl.dispose();
+    _regPhoneCtrl.dispose();
+    _regEmailCtrl.dispose();
+    _regPasswordCtrl.dispose();
+    _regConfirmCtrl.dispose();
     super.dispose();
   }
 
@@ -45,12 +60,14 @@ class _LoginViewState extends State<LoginView>
     setState(() {
       _selectedRole = role;
       _errorMessage = null;
-      // Clear fields when switching portal — no pre-fill
+      _successMessage = null;
+      _showRegister = false;
       _emailCtrl.clear();
       _passwordCtrl.clear();
     });
   }
 
+  // ── Sign In ────────────────────────────────────────────────────────────────
   Future<void> _handleLogin() async {
     final email    = _emailCtrl.text.trim();
     final password = _passwordCtrl.text;
@@ -64,11 +81,10 @@ class _LoginViewState extends State<LoginView>
       return;
     }
 
-    setState(() { _isLoading = true; _errorMessage = null; });
+    setState(() { _isLoading = true; _errorMessage = null; _successMessage = null; });
 
     final auth = Provider.of<AuthProvider>(context, listen: false);
 
-    // Demo mode — Supabase not yet configured
     if (!AppConfig.supabaseConfigured) {
       await Future.delayed(const Duration(milliseconds: 500));
       auth.login(email: email, role: _selectedRole);
@@ -76,7 +92,6 @@ class _LoginViewState extends State<LoginView>
       return;
     }
 
-    // Real Supabase auth
     try {
       await auth.signInWithSupabase(
         email: email,
@@ -93,15 +108,72 @@ class _LoginViewState extends State<LoginView>
     }
   }
 
+  // ── Customer Register ──────────────────────────────────────────────────────
+  Future<void> _handleRegister() async {
+    final name     = _regNameCtrl.text.trim();
+    final phone    = _regPhoneCtrl.text.trim();
+    final email    = _regEmailCtrl.text.trim();
+    final password = _regPasswordCtrl.text;
+    final confirm  = _regConfirmCtrl.text;
+
+    if (name.isEmpty) {
+      setState(() => _errorMessage = 'Please enter your full name.');
+      return;
+    }
+    if (email.isEmpty || !email.contains('@')) {
+      setState(() => _errorMessage = 'Please enter a valid email address.');
+      return;
+    }
+    if (password.length < 6) {
+      setState(() =>
+          _errorMessage = 'Password must be at least 6 characters.');
+      return;
+    }
+    if (password != confirm) {
+      setState(() => _errorMessage = 'Passwords do not match.');
+      return;
+    }
+
+    setState(() { _isLoading = true; _errorMessage = null; _successMessage = null; });
+
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    try {
+      await auth.registerCustomer(
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+      );
+      // If no exception thrown and still mounted the user is logged in
+    } catch (e) {
+      final msg = e.toString().replaceAll('Exception: ', '');
+      if (mounted) {
+        // "check your email" means registration succeeded but needs confirmation
+        if (msg.toLowerCase().contains('check your email') ||
+            msg.toLowerCase().contains('confirm')) {
+          setState(() {
+            _successMessage =
+                '✅ Account created! Check your email to confirm, then sign in.';
+            _showRegister = false;
+            _emailCtrl.text = email;
+          });
+        } else {
+          setState(() => _errorMessage = msg);
+        }
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isWide = !context.isMobile;
     return Scaffold(
-      body: isWide ? _wideLayout() : _narrowLayout(),
+      body: context.isMobile ? _narrowLayout() : _wideLayout(),
     );
   }
 
-  // ── Desktop / tablet ───────────────────────────────────────────────────────
+  // ── Desktop ────────────────────────────────────────────────────────────────
   Widget _wideLayout() {
     return Row(
       children: [
@@ -118,7 +190,7 @@ class _LoginViewState extends State<LoginView>
                   const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 440),
-                child: _loginForm(),
+                child: _mainForm(),
               ),
             ),
           ),
@@ -132,7 +204,6 @@ class _LoginViewState extends State<LoginView>
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Compact hero header
           Container(
             width: double.infinity,
             color: AppTheme.primaryBlue,
@@ -148,22 +219,18 @@ class _LoginViewState extends State<LoginView>
                       color: Colors.white),
                 ),
                 const SizedBox(width: 12),
-                Expanded(
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        AppConfig.appName,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      Text(
-                        'Smart ERP & POS Billing',
-                        style:
-                            TextStyle(fontSize: 12, color: Colors.white70),
-                      ),
+                    children: [
+                      Text(AppConfig.appName,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
+                      Text('Smart ERP & POS Billing',
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.white70)),
                     ],
                   ),
                 ),
@@ -177,20 +244,23 @@ class _LoginViewState extends State<LoginView>
           ),
           Padding(
             padding: const EdgeInsets.all(20),
-            child: _loginForm(),
+            child: _mainForm(),
           ),
         ],
       ),
     );
   }
 
-  // ── Shared login form ──────────────────────────────────────────────────────
-  Widget _loginForm() {
+  // ── Main form — switches between Sign In and Register ─────────────────────
+  Widget _mainForm() {
+    // When Customer is selected and register mode is on, show register form
+    final isCustomer = _selectedRole == UserRole.customer;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Portal Access Login',
+          'Portal Access',
           style: TextStyle(
             fontSize: context.isMobile ? 22 : 26,
             fontWeight: FontWeight.bold,
@@ -204,11 +274,11 @@ class _LoginViewState extends State<LoginView>
         ),
         const SizedBox(height: 20),
 
-        // ── Role cards ───────────────────────────────────────────────────
+        // ── Role cards ─────────────────────────────────────────────────────
         _RoleCard(
           role: UserRole.businessAdmin,
           title: 'Business Admin & Staff',
-          subtitle: 'POS Billing · FEFO Stock · GST · Regulatory',
+          subtitle: 'POS · FEFO Stock · GST · Regulatory',
           icon: Icons.store,
           selectedRole: _selectedRole,
           onTap: _onRoleSelected,
@@ -233,89 +303,65 @@ class _LoginViewState extends State<LoginView>
         ),
         const SizedBox(height: 24),
 
-        // ── Email ────────────────────────────────────────────────────────
-        TextField(
-          controller: _emailCtrl,
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-          decoration: const InputDecoration(
-            labelText: 'Email Address',
-            hintText: 'Enter your email',
-            prefixIcon: Icon(Icons.email_outlined),
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        // ── Password ─────────────────────────────────────────────────────
-        TextField(
-          controller: _passwordCtrl,
-          obscureText: _obscurePassword,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _handleLogin(),
-          decoration: InputDecoration(
-            labelText: 'Password',
-            hintText: 'Enter your password',
-            prefixIcon: const Icon(Icons.lock_outlined),
-            suffixIcon: IconButton(
-              icon: Icon(_obscurePassword
-                  ? Icons.visibility_outlined
-                  : Icons.visibility_off_outlined),
-              onPressed: () =>
-                  setState(() => _obscurePassword = !_obscurePassword),
-            ),
-          ),
-        ),
-
-        // ── Error message ─────────────────────────────────────────────────
-        if (_errorMessage != null) ...[
-          const SizedBox(height: 12),
+        // ── Sign In / Register tab strip (Customer portal only) ────────────
+        if (isCustomer) ...[
           Container(
-            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.errorRed.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(8),
-              border:
-                  Border.all(color: AppTheme.errorRed.withValues(alpha: 0.4)),
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(10),
             ),
+            padding: const EdgeInsets.all(4),
             child: Row(
               children: [
-                const Icon(Icons.error_outline,
-                    color: AppTheme.errorRed, size: 18),
-                const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(
-                        color: AppTheme.errorRed, fontSize: 12),
+                  child: _tabBtn(
+                    label: 'Sign In',
+                    icon: Icons.login,
+                    active: !_showRegister,
+                    onTap: () => setState(() {
+                      _showRegister = false;
+                      _errorMessage = null;
+                      _successMessage = null;
+                    }),
+                  ),
+                ),
+                Expanded(
+                  child: _tabBtn(
+                    label: 'Create Account',
+                    icon: Icons.person_add,
+                    active: _showRegister,
+                    onTap: () => setState(() {
+                      _showRegister = true;
+                      _errorMessage = null;
+                      _successMessage = null;
+                    }),
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 20),
         ],
-        const SizedBox(height: 16),
 
-        // ── Sign in button ────────────────────────────────────────────────
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: _isLoading ? null : _handleLogin,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(
-                        strokeWidth: 2, color: Colors.white),
-                  )
-                : Text(
-                    'Sign In — ${_portalLabel(_selectedRole)}',
-                    style: const TextStyle(fontSize: 15),
-                  ),
-          ),
-        ),
+        // ── Form area ──────────────────────────────────────────────────────
+        if (isCustomer && _showRegister)
+          _registerForm()
+        else
+          _signInForm(),
 
-        // ── Demo mode hint ────────────────────────────────────────────────
+        // ── Feedback messages ──────────────────────────────────────────────
+        if (_errorMessage != null) ...[
+          const SizedBox(height: 12),
+          _feedbackBanner(
+              _errorMessage!, AppTheme.errorRed, Icons.error_outline),
+        ],
+        if (_successMessage != null) ...[
+          const SizedBox(height: 12),
+          _feedbackBanner(
+              _successMessage!, AppTheme.successGreen, Icons.check_circle_outline),
+        ],
+
+        // ── Demo hint ──────────────────────────────────────────────────────
         if (!AppConfig.supabaseConfigured) ...[
           const SizedBox(height: 12),
           Container(
@@ -331,7 +377,7 @@ class _LoginViewState extends State<LoginView>
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Demo mode — enter any email & password to proceed.',
+                    'Demo mode — enter any credentials to proceed.',
                     style: TextStyle(
                         color: AppTheme.accentOrange,
                         fontSize: 11,
@@ -355,6 +401,261 @@ class _LoginViewState extends State<LoginView>
           ),
         ),
       ],
+    );
+  }
+
+  // ── Sign In form ───────────────────────────────────────────────────────────
+  Widget _signInForm() {
+    return Column(
+      children: [
+        TextField(
+          controller: _emailCtrl,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+            labelText: 'Email Address',
+            hintText: 'your@email.com',
+            prefixIcon: Icon(Icons.email_outlined),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _passwordCtrl,
+          obscureText: _obscurePassword,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _handleLogin(),
+          decoration: InputDecoration(
+            labelText: 'Password',
+            hintText: 'Enter your password',
+            prefixIcon: const Icon(Icons.lock_outlined),
+            suffixIcon: IconButton(
+              icon: Icon(_obscurePassword
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined),
+              onPressed: () =>
+                  setState(() => _obscurePassword = !_obscurePassword),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: _isLoading ? null : _handleLogin,
+            child: _isLoading
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white))
+                : Text('Sign In — ${_portalLabel(_selectedRole)}',
+                    style: const TextStyle(fontSize: 15)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Register form (Customer portal) ───────────────────────────────────────
+  Widget _registerForm() {
+    return Column(
+      children: [
+        // Name
+        TextField(
+          controller: _regNameCtrl,
+          textInputAction: TextInputAction.next,
+          textCapitalization: TextCapitalization.words,
+          decoration: const InputDecoration(
+            labelText: 'Full Name *',
+            hintText: 'e.g. John Doe',
+            prefixIcon: Icon(Icons.person_outline),
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Phone
+        TextField(
+          controller: _regPhoneCtrl,
+          keyboardType: TextInputType.phone,
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+            labelText: 'Mobile Number',
+            hintText: '+44 7700 900000',
+            prefixIcon: Icon(Icons.phone_outlined),
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Email
+        TextField(
+          controller: _regEmailCtrl,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+            labelText: 'Email Address *',
+            hintText: 'your@email.com',
+            prefixIcon: Icon(Icons.email_outlined),
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Password
+        TextField(
+          controller: _regPasswordCtrl,
+          obscureText: _obscureRegPassword,
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            labelText: 'Password *',
+            hintText: 'Min 6 characters',
+            prefixIcon: const Icon(Icons.lock_outlined),
+            suffixIcon: IconButton(
+              icon: Icon(_obscureRegPassword
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined),
+              onPressed: () => setState(
+                  () => _obscureRegPassword = !_obscureRegPassword),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Confirm password
+        TextField(
+          controller: _regConfirmCtrl,
+          obscureText: _obscureConfirm,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _handleRegister(),
+          decoration: InputDecoration(
+            labelText: 'Confirm Password *',
+            hintText: 'Re-enter password',
+            prefixIcon: const Icon(Icons.lock_outline),
+            suffixIcon: IconButton(
+              icon: Icon(_obscureConfirm
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined),
+              onPressed: () =>
+                  setState(() => _obscureConfirm = !_obscureConfirm),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Terms note
+        const Text(
+          'By creating an account you agree to LIFESPROUT Care\'s '
+          'terms of service and privacy policy.',
+          style: TextStyle(fontSize: 11, color: AppTheme.textMuted, height: 1.4),
+        ),
+        const SizedBox(height: 16),
+
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.successGreen),
+            onPressed: _isLoading ? null : _handleRegister,
+            icon: _isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white))
+                : const Icon(Icons.person_add),
+            label: const Text('Create Patient Account',
+                style: TextStyle(fontSize: 15)),
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // Already have account link
+        Center(
+          child: TextButton(
+            onPressed: () => setState(() {
+              _showRegister = false;
+              _errorMessage = null;
+              _regEmailCtrl.text.isNotEmpty
+                  ? _emailCtrl.text = _regEmailCtrl.text
+                  : null;
+            }),
+            child: const Text(
+              'Already have an account? Sign In →',
+              style: TextStyle(fontSize: 12, color: AppTheme.primaryBlue),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  Widget _tabBtn({
+    required String label,
+    required IconData icon,
+    required bool active,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: active ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: active
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  )
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon,
+                size: 16,
+                color: active
+                    ? AppTheme.primaryBlue
+                    : AppTheme.textMuted),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight:
+                    active ? FontWeight.bold : FontWeight.normal,
+                color: active ? AppTheme.primaryBlue : AppTheme.textMuted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _feedbackBanner(String msg, Color color, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(msg,
+                style: TextStyle(color: color, fontSize: 12, height: 1.4)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -395,13 +696,11 @@ class _HeroPanel extends StatelessWidget {
                   color: Colors.white),
             ),
             const SizedBox(height: 20),
-            const Text(
-              AppConfig.appName,
-              style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
+            const Text(AppConfig.appName,
+                style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
             const SizedBox(height: 6),
             const Text(
               'Smart ERP & Fast POS Billing System\nby LIFESPROUT Care',
@@ -415,8 +714,8 @@ class _HeroPanel extends StatelessWidget {
                 'FEFO Batch Selection & Schedule H/H1 Regulatory Logs'),
             _bullet(Icons.receipt_long,
                 'Dual Thermal & PDF Printing + WhatsApp Receipt Sharing'),
-            _bullet(
-                Icons.system_update, 'Over-The-Air (OTA) Enterprise Updates'),
+            _bullet(Icons.system_update,
+                'Over-The-Air (OTA) Enterprise Updates'),
             _bullet(Icons.cloud_sync,
                 'Supabase PostgreSQL Real-time Cloud Sync'),
             const SizedBox(height: 28),
@@ -463,8 +762,7 @@ class _HeroPanel extends StatelessWidget {
                       child: Text(
                         'Support: ${AppConfig.whatsappSupportNumber}\n'
                         '${AppConfig.technicalSupportEmail}',
-                        style:
-                            TextStyle(color: Colors.white, fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ),
                     Icon(Icons.arrow_forward_ios,
@@ -488,8 +786,7 @@ class _HeroPanel extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(text,
-                style:
-                    const TextStyle(color: Colors.white, fontSize: 13)),
+                style: const TextStyle(color: Colors.white, fontSize: 13)),
           ),
         ],
       ),
@@ -531,16 +828,18 @@ class _RoleCard extends StatelessWidget {
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color:
-                isSelected ? AppTheme.primaryBlue : Colors.grey.shade300,
+            color: isSelected
+                ? AppTheme.primaryBlue
+                : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor:
-                  isSelected ? AppTheme.primaryBlue : Colors.grey.shade200,
+              backgroundColor: isSelected
+                  ? AppTheme.primaryBlue
+                  : Colors.grey.shade200,
               child: Icon(icon,
                   color: isSelected ? Colors.white : Colors.grey.shade700),
             ),
@@ -549,21 +848,16 @@ class _RoleCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: isSelected
-                          ? AppTheme.primaryBlue
-                          : AppTheme.textDark,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                        fontSize: 11, color: AppTheme.textMuted),
-                  ),
+                  Text(title,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: isSelected
+                              ? AppTheme.primaryBlue
+                              : AppTheme.textDark)),
+                  Text(subtitle,
+                      style: const TextStyle(
+                          fontSize: 11, color: AppTheme.textMuted)),
                 ],
               ),
             ),

@@ -15,7 +15,6 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   AuthProvider() {
-    // Restore session if Supabase is configured
     if (AppConfig.supabaseConfigured) {
       _restoreSession();
       SupabaseService().authStateStream.listen(_onAuthStateChange);
@@ -28,23 +27,21 @@ class AuthProvider extends ChangeNotifier {
       id: 'usr_${DateTime.now().millisecondsSinceEpoch}',
       name: role == UserRole.superAdmin
           ? 'Lifesprout Super Admin'
-          : (role == UserRole.customer
-              ? 'John Doe (Patient)'
-              : 'Dr. Sarah Connor (Pharmacist)'),
+          : role == UserRole.customer
+              ? 'Patient User'
+              : 'Dr. Sarah Connor (Pharmacist)',
       email: email,
       phone: '+44 7747 571513',
       role: role,
-      companyId:
-          role == UserRole.superAdmin ? null : 'comp_lifesprout_01',
-      licenseNo:
-          role == UserRole.pharmacist || role == UserRole.businessAdmin
-              ? 'PH-UK-984721'
-              : null,
+      companyId: role == UserRole.superAdmin ? null : 'comp_lifesprout_01',
+      licenseNo: role == UserRole.pharmacist || role == UserRole.businessAdmin
+          ? 'PH-UK-984721'
+          : null,
     );
     notifyListeners();
   }
 
-  // ── Supabase Auth ─────────────────────────────────────────────────────────
+  // ── Sign in ───────────────────────────────────────────────────────────────
   Future<void> signInWithSupabase({
     required String email,
     required String password,
@@ -67,23 +64,51 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> sendOtp(String email) async {
-    await SupabaseService().sendOtp(email);
-  }
-
-  Future<void> verifyOtp({
+  // ── Customer self-registration ────────────────────────────────────────────
+  Future<void> registerCustomer({
+    required String name,
     required String email,
-    required String token,
-    required UserRole role,
+    required String phone,
+    required String password,
   }) async {
     _isLoading = true;
     notifyListeners();
+
+    // Demo mode — create local account instantly
+    if (!AppConfig.supabaseConfigured) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      _currentUser = AppUser(
+        id: 'cust_${DateTime.now().millisecondsSinceEpoch}',
+        name: name,
+        email: email,
+        phone: phone,
+        role: UserRole.customer,
+        companyId: null,
+        licenseNo: null,
+      );
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    // Live Supabase registration
     try {
-      final response = await SupabaseService()
-          .verifyOtp(email: email, token: token);
+      final response = await SupabaseService().signUp(
+        email: email,
+        password: password,
+        data: {
+          'name': name,
+          'phone': phone,
+          'role': UserRole.customer.name,
+        },
+      );
       final user = response.user;
-      if (user == null) throw Exception('OTP verification failed.');
-      _currentUser = _userFromSupabase(user, role);
+      if (user == null) {
+        // Supabase returns null user when email confirmation is required
+        throw Exception(
+            'Account created! Check your email to confirm, then sign in.');
+      }
+      _currentUser = _userFromSupabase(user, UserRole.customer);
       notifyListeners();
     } on AuthException catch (e) {
       throw Exception(e.message);
@@ -93,6 +118,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  // ── Sign out ──────────────────────────────────────────────────────────────
   void logout() {
     if (AppConfig.supabaseConfigured) {
       SupabaseService().signOut().catchError((_) {});
@@ -116,10 +142,9 @@ class AuthProvider extends ChangeNotifier {
   void _restoreSession() {
     final session = SupabaseService().currentSession;
     if (session != null) {
-      // Determine role from user_metadata or default to businessAdmin
-      final meta = session.user.userMetadata;
+      final meta     = session.user.userMetadata;
       final roleName = meta?['role'] as String? ?? 'businessAdmin';
-      final role = UserRole.values.firstWhere(
+      final role     = UserRole.values.firstWhere(
         (r) => r.name == roleName,
         orElse: () => UserRole.businessAdmin,
       );
